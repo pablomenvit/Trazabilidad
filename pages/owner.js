@@ -9,7 +9,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 export default function Owner (props) {
 
   const [address, setAddress] = useState('');
-  const [userName, setUserName] = useState('');
+  const [nombre, setNombre] = useState('');
   const [role, setRole] = useState('');
   const [location, setLocation] = useState('');
 
@@ -32,16 +32,14 @@ export default function Owner (props) {
     }
   }
 
-  const registerUser = async () => {
+  const registrarUsuario = async () => {
     try {
-      const transparency = await getContract(true);
+      const trazabilidad = await getContract(true);
 
-      await transparency.registerUser(
+      await trazabilidad.registrarUsuario(
         address,
-        userName,
-        location,
-        Date.now(),
-        translateRole(role)
+        nombre,
+        role
       );
     } catch (error) {
       console.log(error);
@@ -53,10 +51,10 @@ export default function Owner (props) {
 
     event.preventDefault();
 
-    registerUser();
+    registrarUsuario();
 
     setAddress('');
-    setUserName('');
+    setNombre('');
     setRole('');
     setLocation('');
   }
@@ -76,22 +74,15 @@ export default function Owner (props) {
                 onChange={event => setAddress(event.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="userName">
+            <Form.Group className="mb-3" controlId="nombre">
               <Form.Label>Nombre</Form.Label>
               <Form.Control
-                placeholder="Enter user Introduce el nombre"
-                value={userName}
-                onChange={event => setUserName(event.target.value)}
+                placeholder="Introduce el nombre"
+                value={nombre}
+                onChange={event => setNombre(event.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="role">
-              <Form.Label>Rol</Form.Label>
-              <Form.Control
-                placeholder="Selecciona el Rol"
-                value={role}
-                onChange={event => setRole(event.target.value)}
-              />
-            </Form.Group>
+            
 
             <Form.Group className="mb-3" controlId="rol">
               <Form.Label>Rol</Form.Label>

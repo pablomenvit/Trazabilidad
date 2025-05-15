@@ -32,14 +32,14 @@ export default function Agicultor(props) {
   }
 
   const getTokens = async () => {
-    const transparency = await getContract(true);
-    const tokens = await transparency.getTokenIds();
+    const trazabilidad = await getContract(true);
+    const tokens = await trazabilidad.getTokenIds();
     var res = [];
 
     for (var i = 0; i < tokens.length; i++) {
       var id = tokens[i].toNumber();
       if (id != 0) {
-        const attrs = await trazabilidad.getTokenAttrs(tokens[i]);
+        const attrs = await trazabilidad.obtenerAtributosToken(tokens[i]);
         res.push({
           tokenId: id,
           producto: attrs[1],
