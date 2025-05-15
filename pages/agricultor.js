@@ -210,7 +210,7 @@ export default function Agicultor(props) {
         <div className={styles.flexContainer}>
           <div className={styles.form}>
             <Form onSubmit={handleMint}>
-              <h4>Mint</h4>
+              <h4>Minado</h4>
               <Form.Group className="mb-3" controlId="productName">
                 <Form.Label>Producto</Form.Label>
                 <Form.Control
@@ -237,7 +237,7 @@ export default function Agicultor(props) {
               </Form.Group>
               {
                 <Button variant="primary" type="submit" disabled={producto == '' || lote == '' || fertilizante == ''}>
-                  Mint
+                  Minar
                 </Button>
               }
 
@@ -245,7 +245,7 @@ export default function Agicultor(props) {
           </div>
 
           <div className={styles.form}>
-            <h4>Transfers</h4>
+            <h4>Transferencias</h4>
             {
               <div>
                 <p>Selecciona el token a transferir</p>
