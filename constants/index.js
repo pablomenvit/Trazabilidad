@@ -1,4 +1,4 @@
-export const NFT_CONTRACT_ADDRESS = "0x8199d97e6dd54ce193eb3a5ec6d5be92ee43826f";
+export const NFT_CONTRACT_ADDRESS = "0x52d7c65eef1066972c3d63e1713145a94264465e";
 export const ABI = [
 	{
 		"inputs": [],
@@ -283,13 +283,8 @@ export const ABI = [
 				"type": "address"
 			},
 			{
-				"internalType": "uint256",
-				"name": "origen",
-				"type": "uint256"
-			},
-			{
 				"internalType": "uint8",
-				"name": "cantidad",
+				"name": "lote",
 				"type": "uint8"
 			},
 			{
@@ -303,9 +298,14 @@ export const ABI = [
 				"type": "uint8"
 			},
 			{
-				"internalType": "int8",
-				"name": "temperatura",
-				"type": "int8"
+				"internalType": "uint16",
+				"name": "temperaturaMin",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint16",
+				"name": "temperaturaMax",
+				"type": "uint16"
 			},
 			{
 				"internalType": "string",
@@ -313,14 +313,9 @@ export const ABI = [
 				"type": "string"
 			},
 			{
-				"internalType": "string",
-				"name": "insecticida",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "fungicida",
-				"type": "string"
+				"internalType": "uint16",
+				"name": "precio",
+				"type": "uint16"
 			}
 		],
 		"stateMutability": "view",
@@ -471,8 +466,13 @@ export const ABI = [
 			},
 			{
 				"internalType": "uint8",
-				"name": "_cantidad",
+				"name": "_lote",
 				"type": "uint8"
+			},
+			{
+				"internalType": "string",
+				"name": "_fertilizante",
+				"type": "string"
 			}
 		],
 		"name": "minado",
@@ -509,14 +509,14 @@ export const ABI = [
 				"type": "address"
 			},
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			},
-			{
 				"internalType": "uint8",
 				"name": "",
 				"type": "uint8"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			},
 			{
 				"internalType": "string",
@@ -551,11 +551,6 @@ export const ABI = [
 				"internalType": "enum TrazabilidadAB.Role",
 				"name": "",
 				"type": "uint8"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -633,11 +628,6 @@ export const ABI = [
 				"internalType": "enum TrazabilidadAB.Role",
 				"name": "_role",
 				"type": "uint8"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_fecha_registro",
-				"type": "uint256"
 			}
 		],
 		"name": "registrarUsuario",
