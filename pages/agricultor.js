@@ -59,7 +59,7 @@ export default function Agicultor(props) {
     try {
       let tokenId = Date.now();
       const trazabilidad = await getContract(true);
-      const tx = await trazabilidad.mint(0, tokenId, producto, lote, fertilizante);
+      const tx = await trazabilidad.minado(0, tokenId, producto, lote, fertilizante);
 
       setLoading(true);
       await tx.wait();
@@ -80,7 +80,7 @@ export default function Agicultor(props) {
     setSelectedTokenId('');
     setLote('');
     setProducto('');
-    setFertiizante('');
+    setFertilizante('');
   }
 
   const transferComercio = async () => {
