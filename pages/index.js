@@ -126,7 +126,7 @@ export default function Home() {
     switch (userLogged) {
       case 0:
         return (
-          <Owner provider={provider}/>
+          <Agricultor provider={provider}/>
         );
       case 1:
         return (
@@ -138,7 +138,7 @@ export default function Home() {
         );  
       case 3:
         return (
-          <Agricultor provider={provider} />
+          <Owner provider={provider} />
         );
     }
   }
