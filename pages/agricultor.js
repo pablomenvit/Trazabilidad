@@ -9,18 +9,18 @@ import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 
-export default function Farmer(props) {
+export default function Agicultor(props) {
 
   const [loading, setLoading] = useState(false);
   const [tokens, setTokens] = useState([]);
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
   // variables related to mint of token
-  const [productName, setProductName] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [unit, setUnit] = useState('');
+  const [producto, setProducto] = useState('');
+  const [lote, setLote] = useState('');
+  const [fertilizante, setFertilizante] = useState('');
 
-  const bakerAddress = "0xbb08598F0D75c9Ff8f84d82EC324b0F1B79B7aCf";
+  const comercioAddress = "0x71AF60DfAf489E86Ff9dfEEC167D839d0aa0FAe0";
 
 
   const getContract = async (needSigner = false) => {
@@ -39,13 +39,14 @@ export default function Farmer(props) {
     for (var i = 0; i < tokens.length; i++) {
       var id = tokens[i].toNumber();
       if (id != 0) {
-        const attrs = await transparency.getTokenAttrs(tokens[i]);
+        const attrs = await trazabilidad.getTokenAttrs(tokens[i]);
         res.push({
           tokenId: id,
-          product: attrs[3],
-          quantity: attrs[2],
-          unit: attrs[4],
-          state: attrs[5]
+          producto: attrs[1],
+          lote: attrs[2],
+          precio: attrs[4],
+          fertilizante: attrs[3], 
+          estado: attrs[8],
         });
       }
     }
@@ -54,18 +55,18 @@ export default function Farmer(props) {
     setLoading(false);
   }
 
-  const mintFarmer = async () => {
+  const minadoAgricultor = async () => {
     try {
       let tokenId = Date.now();
-      const transparency = await getContract(true);
-      const tx = await transparency.mint(0, tokenId, quantity, productName, unit);
+      const trazabilidad = await getContract(true);
+      const tx = await trazabilidad.mint(0, tokenId, producto, lote, fertilizante);
 
       setLoading(true);
       await tx.wait();
 
     } catch (error) {
       console.log(error);
-      window.alert("There was an error with the mint!");
+      window.alert("Ha habido un error al minar el token!");
     }
   }
 
@@ -73,26 +74,26 @@ export default function Farmer(props) {
 
     event.preventDefault();
 
-    mintFarmer();
+    minadoAgricultor();
 
     setPrevIndex(null);
     setSelectedTokenId('');
-    setQuantity('');
-    setProductName('');
-    setUnit('');
+    setLote('');
+    setProducto('');
+    setFertiizante('');
   }
 
-  const transferBaker = async () => {
+  const transferComercio = async () => {
     try {
-      const transparency = await getContract(true);
-      const tx = await transparency.transferToBaker(utils.getAddress(bakerAddress), selectedTokenId);
+      const trazabilidad = await getContract(true);
+      const tx = await trazabilidad.transferirAlsiguiente(utils.getAddress(comercioAddress), selectedTokenId);
 
       setLoading(true);
       await tx.wait();
 
     } catch (error) {
       console.log(error);
-      window.alert("There was an error with transfer");
+      window.alert("Error al transferir el token");
     }
   }
 
@@ -134,12 +135,12 @@ export default function Farmer(props) {
     }
     fetchTokens();
 
-    transparency.on(transparency.filters.Transaction(currentAccount, null, 0), async (_from, _tokenId, _state) => {
+    transparency.on(transparency.filters.Transaccion(currentAccount, null, 0), async (_from, _tokenId, _state) => {
       setLoading(true);
       await getTokens();
     });
 
-    transparency.on(transparency.filters.Transaction(bakerAddress, null, [1, 3]), async (_from, _tokenId, _state) => {
+    transparency.on(transparency.filters.Transaccion(comercioAddress, null, [1, 3]), async (_from, _tokenId, _state) => {
       setLoading(true);
       await getTokens();
     });
@@ -155,19 +156,19 @@ export default function Farmer(props) {
     <div>
       <div className={styles.main}>
         <div className={styles.title}>
-          <img width={100} height={100} src="/farmerColor.png" alt="farmer icon" />
-          <h2>Farmer User Account</h2>
+          <img width={100} height={100} src="/farmerColor.png" alt="icono agricultor" />
+          <h2>Agricultor</h2>
         </div>
 
         <Table striped bordered hover className={styles.table}>
           <thead>
             <tr>
-              <th>Select</th>
+              <th>Selecciona</th>
               <th>Token ID</th>
-              <th>Product Name</th>
-              <th>Quantity</th>
-              <th>Unit</th>
-              <th>State</th>
+              <th>Nombre de producto</th>
+              <th>Fertilizante</th>
+              <th>Número de lote</th>
+              <th>Estado</th>
             </tr>
           </thead>
           <tbody>
@@ -176,7 +177,7 @@ export default function Farmer(props) {
               <tr>
                 <td style={{ '--bs-table-accent-bg': 'white', 'textAlign': 'center' }} colSpan='6'>
                   <img src="./loading.gif" alt="loading..." />
-                  <p className={styles.p_no_margin}>Loading, wait some seconds...</p>
+                  <p className={styles.p_no_margin}>Cargando, espera unos segundos...</p>
                 </td>
               </tr>
               :
@@ -194,9 +195,9 @@ export default function Farmer(props) {
                     />
                   </td>
                   <td>{item.tokenId}</td>
-                  <td>{item.product}</td>
-                  <td>{item.quantity}</td>
-                  <td>{item.unit}</td>
+                  <td>{item.producto}</td>
+                  <td>{item.fertilizante}</td>
+                  <td>{item.lote}</td>
                   <td>{translateState(item.state)}</td>
                 </tr>
               ))
@@ -211,33 +212,31 @@ export default function Farmer(props) {
             <Form onSubmit={handleMint}>
               <h4>Mint</h4>
               <Form.Group className="mb-3" controlId="productName">
-                <Form.Label>Product Name</Form.Label>
+                <Form.Label>Producto</Form.Label>
                 <Form.Control
-                  placeholder="Enter name of product"
-                  value={productName}
-                  onChange={event => setProductName(event.target.value)}
+                  placeholder="Introduce el producto"
+                  value={producto}
+                  onChange={event => setProducto(event.target.value)}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="quantity">
-                <Form.Label>Quantity</Form.Label>
+                <Form.Label>Lote</Form.Label>
                 <Form.Control
-                  placeholder="Enter quantity"
-                  value={quantity}
-                  onChange={event => setQuantity(event.target.value)}
+                  placeholder="Número de lote"
+                  value={lote}
+                  onChange={event => setLote(event.target.value)}
                 />
               </Form.Group>
-              <Form.Group className="mb-3" controlId="unit">
-                <Form.Select
-                  value={unit}
-                  onChange={event => setUnit(event.target.value)}>
-                  <option>Select unit</option>
-                  <option value="Kgs">Kgs</option>
-                  <option value="L">L</option>
-                  <option value="Unit">Unit</option>
-                </Form.Select>
+              <Form.Group className="mb-3" controlId="quantity">
+                <Form.Label>Fertilizante</Form.Label>
+                <Form.Control
+                  placeholder="Fertilizante usado"
+                  value={fertilizante}
+                  onChange={event => setFertilizante(event.target.value)}
+                />
               </Form.Group>
               {
-                <Button variant="primary" type="submit" disabled={productName == '' || quantity == '' || unit == ''}>
+                <Button variant="primary" type="submit" disabled={producto == '' || lote == '' || fertilizante == ''}>
                   Mint
                 </Button>
               }
@@ -249,9 +248,9 @@ export default function Farmer(props) {
             <h4>Transfers</h4>
             {
               <div>
-                <p>Select first the token to transfer</p>
-                <Button variant="primary" onClick={transferBaker} disabled={selectedTokenId == ''}>
-                  Transfer to baker
+                <p>Selecciona el token a transferir</p>
+                <Button variant="primary" onClick={transferComercio} disabled={selectedTokenId == ''}>
+                  Transfiere al mercado
                 </Button>
               </div>
             }

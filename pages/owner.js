@@ -45,7 +45,7 @@ export default function Owner (props) {
       );
     } catch (error) {
       console.log(error);
-      window.alert("There was an error while registering user");
+      window.alert("Ha habido un error al registrar el usuario");
     }
   }
 
@@ -64,44 +64,49 @@ export default function Owner (props) {
   return (
     <div>
       <div className={styles.main}>
-        <h2>Admin User Account</h2>
+        <h2>Panel de administración de usuarios</h2>
         <div className={styles.form}>
           <Form onSubmit={handleRegister}>
-            <h4>Sign User</h4>
+            <h4>Usuario</h4>
             <Form.Group className="mb-3" controlId="adress">
-              <Form.Label>Account address</Form.Label>
+              <Form.Label>Address del usuario</Form.Label>
               <Form.Control
-                placeholder="Enter account address"
+                placeholder="Introduce la address"
                 value={address}
                 onChange={event => setAddress(event.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="userName">
-              <Form.Label>Name</Form.Label>
+              <Form.Label>Nombre</Form.Label>
               <Form.Control
-                placeholder="Enter user name"
+                placeholder="Enter user Introduce el nombre"
                 value={userName}
                 onChange={event => setUserName(event.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="role">
-              <Form.Label>Role</Form.Label>
+              <Form.Label>Rol</Form.Label>
               <Form.Control
-                placeholder="Enter role"
+                placeholder="Selecciona el Rol"
                 value={role}
                 onChange={event => setRole(event.target.value)}
               />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Location</Form.Label>
-              <Form.Control
-                placeholder="Enter location"
-                value={location}
-                onChange={event => setLocation(event.target.value)}
-              />
+
+            <Form.Group className="mb-3" controlId="rol">
+              <Form.Label>Rol</Form.Label>
+                <Form.Select
+                  value={role}
+                  onChange={event => setRole(event.target.value)}>
+                  <option>Selecciona rol</option>
+                  <option value="0">Agricultor</option>
+                  <option value="1">Comercio</option>
+                  <option value="2">Transporte</option>
+                  <option value="3">Consumidor</option>
+                </Form.Select>
             </Form.Group>
             <Button variant="primary" type="submit">
-              Register User
+              Registrar usuario
             </Button>
           </Form>
         </div>
