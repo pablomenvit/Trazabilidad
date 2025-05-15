@@ -156,7 +156,7 @@ export default function Agicultor(props) {
     <div>
       <div className={styles.main}>
         <div className={styles.title}>
-          <img width={100} height={100} src="/farmerColor.png" alt="icono agricultor" />
+          <img width={100} height={100} src="./agricultor.png" alt="icono agricultor" />
           <h2>Agricultor</h2>
         </div>
 
