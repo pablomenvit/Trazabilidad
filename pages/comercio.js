@@ -9,7 +9,7 @@ import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 
-export default function Farmer(props) {
+export default function Comercio(props) {
 
   const [loading, setLoading] = useState(false);
   const [tokens, setTokens] = useState([]);
@@ -33,14 +33,14 @@ export default function Farmer(props) {
   }
 
   const getTokens = async () => {
-    const transparency = await getContract(true);
-    const tokens = await transparency.getTokenIds();
+    const trazabilidad = await getContract(true);
+    const tokens = await trazabilidad.getTokenIds();
     var res = [];
 
     for (var i = 0; i < tokens.length; i++) {
       var id = tokens[i].toNumber();
       if (id != 0) {
-        const attrs = await transparency.getTokenAttrs(tokens[i]);
+        const attrs = await trazabilidad.obtenerAtributosToken(tokens[i]);
         res.push({
           tokenId: id,
           product: attrs[3],
@@ -57,8 +57,8 @@ export default function Farmer(props) {
 
   const getState = async (tokenId) => {
     try {
-      const transparency = await getContract();
-      return await transparency.getState(tokenId);
+      const trazabilidad = await getContract();
+      return await trazabilidad.getState(tokenId);
     } catch (error) {
       console.log(error);
       window.alert("There was an error when getting the state of the token");
@@ -67,8 +67,8 @@ export default function Farmer(props) {
 
   const accept = async (tokenId) => {
     try {
-      const transparency = await getContract(true);
-      const tx = await transparency.accept(tokenId);
+      const ytrazabilidad = await getContract(true);
+      const tx = await trazabilidad.accept(tokenId);
 
       setLoading(true);
       await tx.wait();
@@ -81,8 +81,8 @@ export default function Farmer(props) {
 
   const reject = async (tokenId) => {
     try {
-      const transparency = await getContract(true);
-      const tx = await transparency.reject(tokenId);
+      const trazabilidad = await getContract(true);
+      const tx = await trazabilidad.reject(tokenId);
 
       setLoading(true);
       await tx.wait();
@@ -95,8 +95,8 @@ export default function Farmer(props) {
 
   const mintBaker = async () => {
     try {
-      const transparency = await getContract(true);
-      const tx = await transparency.mint(selectedTokenId, Date.now(), quantity, productName, unit);
+      const trazabilidad = await getContract(true);
+      const tx = await trazabilidad.mint(selectedTokenId, Date.now(), quantity, productName, unit);
 
       setLoading(true);
       await tx.wait();
@@ -122,8 +122,8 @@ export default function Farmer(props) {
 
   const putOnSale = async () => {
     try {
-      const transparency = await getContract(true);
-      const tx = await transparency.putOnSale(selectedTokenId, utils.parseEther(productPrice));
+      const trazabilidad = await getContract(true);
+      const tx = await trazabilidad.putOnSale(selectedTokenId, utils.parseEther(productPrice));
 
       setLoading(true);
       await tx.wait();
@@ -183,7 +183,7 @@ export default function Farmer(props) {
 
   useEffect(() => {
 
-    const transparency = new Contract(NFT_CONTRACT_ADDRESS, ABI, props.provider);
+    const trazabilidad = new Contract(NFT_CONTRACT_ADDRESS, ABI, props.provider);
 
     var currentAccount;
     props.provider.send("eth_requestAccounts", []).then(function (result) {
@@ -196,7 +196,7 @@ export default function Farmer(props) {
     }
     fetchTokens();
 
-    transparency.on(transparency.filters.Transaction(currentAccount, null, [0, 1, 2, 3, 5]), async (_from, _tokenId, _state) => {
+    trazabilidad.on(trazabilidad.filters.Transaccion(currentAccount, null, [0, 1, 2, 3, 5]), async (_from, _tokenId, _state) => {
       setLoading(true);
       await getTokens();
     });
