@@ -61,13 +61,13 @@ export default function Comercio(props) {
       return await trazabilidad.getState(tokenId);
     } catch (error) {
       console.log(error);
-      window.alert("There was an error when getting the state of the token");
+      window.alert("Hay un error obteniendo el estado del token");
     }
   }
 
   const accept = async (tokenId) => {
     try {
-      const ytrazabilidad = await getContract(true);
+      const trazabilidad = await getContract(true);
       const tx = await trazabilidad.accept(tokenId);
 
       setLoading(true);
@@ -75,7 +75,7 @@ export default function Comercio(props) {
 
     } catch (error) {
       console.log(error);
-      window.alert("There was an error when accepting token");
+      window.alert("Hay un error aceptando el token");
     }
   }
 
@@ -89,7 +89,7 @@ export default function Comercio(props) {
 
     } catch (error) {
       console.log(error);
-      window.alert("There was an error when accepting token");
+      window.alert("HA habido un error rechazando el token");
     }
   }
 
@@ -130,7 +130,7 @@ export default function Comercio(props) {
 
     } catch (error) {
       console.log(error);
-      window.alert("There was an error with the on sale");
+      window.alert("Ha habido un errro al poner el token en venta");
     }
   }
 
@@ -252,9 +252,9 @@ export default function Comercio(props) {
                       />
                     </td>
                     <td>{item.tokenId}</td>
-                    <td>{item.product}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.unit}</td>
+                    <td>{item.producto}</td>
+                    <td>{item.lote}</td>
+                    <td>{item.fertilizante}</td>
                     <td>
                       {
                         item.state == 1 ?
@@ -299,7 +299,7 @@ export default function Comercio(props) {
                 <Form.Control
                   placeholder="Enter name of product"
                   value={productName}
-                  onChange={event => setProductName(event.target.value)}
+                  onChange={event => setProducto(event.target.value)}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="quantity">
@@ -330,25 +330,25 @@ export default function Comercio(props) {
           </div>
 
           <div className={styles.form}>
-            <h4>Sell</h4>
+            <h4>Precio de venta</h4>
             {
               selectedTokenId != '' && isNew ?
-                <p>Token selected for sale</p>
+                <p>Token seleccionado para la venta</p>
                 :
-                <p>Select an NEW token</p>
+                <p>Selecciona un token nuevo</p>
             }
             <Form onSubmit={handlePutOnSale}>
-              <Form.Group className="mb-3" controlId="productName">
-                <Form.Label>Price</Form.Label>
+              <Form.Group className="mb-3" controlId="precio">
+                <Form.Label>Precio</Form.Label>
                 <Form.Control
-                  placeholder="Enter price of product"
+                  placeholder="Introduce el precio de venta para el producto"
                   value={productPrice}
                   onChange={event => setProductPrice(event.target.value)}
                 />
               </Form.Group>
               {
                 <Button variant="primary" type="submit" disabled={selectedTokenId == '' || productPrice == '' || !isNew}>
-                  Put on sale
+                  Poner en venta
                 </Button>
               }
             </Form>
