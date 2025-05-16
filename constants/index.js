@@ -1,4 +1,4 @@
-export const NFT_CONTRACT_ADDRESS = "0x52d7c65eef1066972c3d63e1713145a94264465e";
+export const NFT_CONTRACT_ADDRESS = "0x1d03fb20e3eb9f08b67d98419ca70eca009f4ec4";
 export const ABI = [
 	{
 		"inputs": [],
@@ -252,6 +252,19 @@ export const ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "accept",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "to",
 				"type": "address"
@@ -311,11 +324,6 @@ export const ABI = [
 				"internalType": "string",
 				"name": "fertilizante",
 				"type": "string"
-			},
-			{
-				"internalType": "uint16",
-				"name": "precio",
-				"type": "uint16"
 			}
 		],
 		"stateMutability": "view",
@@ -354,6 +362,25 @@ export const ABI = [
 				"internalType": "address",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "getPrice",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -615,6 +642,25 @@ export const ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "precios",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "_direccionUsuario",
 				"type": "address"
@@ -631,6 +677,19 @@ export const ABI = [
 			}
 		],
 		"name": "registrarUsuario",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "reject",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"

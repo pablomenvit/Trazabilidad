@@ -41,6 +41,7 @@ export default function Owner (props) {
         nombre,
         role
       );
+      window.alert("Usuario " + nombre + " registrado correctamente");
     } catch (error) {
       console.log(error);
       window.alert("Ha habido un error al registrar el usuario");
@@ -56,7 +57,7 @@ export default function Owner (props) {
     setAddress('');
     setNombre('');
     setRole('');
-    setLocation('');
+//    setLocation('');
   }
 
   return (

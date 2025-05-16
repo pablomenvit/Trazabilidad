@@ -42,11 +42,10 @@ export default function Agicultor(props) {
         const attrs = await trazabilidad.obtenerAtributosToken(tokens[i]);
         res.push({
           tokenId: id,
-          producto: attrs[1],
-          lote: attrs[2],
-          precio: attrs[4],
+          producto: attrs[2],
+          lote: attrs[1],
           fertilizante: attrs[3], 
-          estado: attrs[8],
+          estado: attrs[4],
         });
       }
     }
@@ -110,13 +109,13 @@ export default function Agicultor(props) {
   const translateState = (state) => {
     switch (state) {
       case 0:
-        return "New";
+        return "Nuevo";
       case 1:
-        return "Delivered";
+        return "Entregado";
       case 2:
-        return "Accepted";
+        return "Aceptado";
       case 3:
-        return "Rejected";
+        return "Rechazado";
     }
   }
 
@@ -198,7 +197,7 @@ export default function Agicultor(props) {
                   <td>{item.producto}</td>
                   <td>{item.fertilizante}</td>
                   <td>{item.lote}</td>
-                  <td>{translateState(item.state)}</td>
+                  <td>{translateState(item.estado)}</td>
                 </tr>
               ))
             }

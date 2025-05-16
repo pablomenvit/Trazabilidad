@@ -133,11 +133,11 @@ export default function Comercio(props) {
       setPrevIndex(index);
       setSelectedTokenId(tokenId);
 
-      getState(tokenId).then(function (state) {
-        if (state == 0) {
+      getState(tokenId).then(function (estado) {
+        if (estado == 0) {
           setIsNew(true);
           setIsAccepted(false);
-        } else if (state == 2) {
+        } else if (estado == 2) {
           setIsNew(false);
           setIsAccepted(true);
         } else {
@@ -148,16 +148,17 @@ export default function Comercio(props) {
     }
   }
 
-  const translateState = (state) => {
-    switch (state) {
+  const translateState = (estado) => {
+    console.log("El estado de ", producto, " es: ", estado)
+    switch (estado) {
       case 0:
-        return "N";
+        return "Nuevo";
       case 1:
-        return "NUEVO";
+        return "Entregado";
       case 2:
-        return "Accepted";
+        return "Aceptado";
       case 3:
-        return "Rejected";
+        return "Rechazado";
     }
   }
 
@@ -176,7 +177,7 @@ export default function Comercio(props) {
     }
     fetchTokens();
 
-    trazabilidad.on(trazabilidad.filters.Transaccion(currentAccount, null, [0, 1, 2, 3, 5]), async (_from, _tokenId, _state) => {
+    trazabilidad.on(trazabilidad.filters.Transaccion(currentAccount, null, [0, 1, 2, 3, 5]), async (_from, _tokenId, _estado) => {
       setLoading(true);
       await getTokens();
     });
@@ -254,7 +255,7 @@ export default function Comercio(props) {
                             </Button>
                           </div>
                           :
-                          <p className={styles.p_no_margin}>{translateState(item.state)}</p>
+                          <p className={styles.p_no_margin}>{translateState(item.estado)}</p>
                       }
                     </td>
                   </tr>
