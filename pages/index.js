@@ -146,7 +146,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Transparency SC</title>
+        <title>Tranzabilidad Alimentaria</title>
       </Head>      
 
       <div>

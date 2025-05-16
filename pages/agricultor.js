@@ -85,7 +85,7 @@ export default function Agicultor(props) {
   const transferComercio = async () => {
     try {
       const trazabilidad = await getContract(true);
-      const tx = await trazabilidad.transferirAlSiguiente(utils.getAddress(comercioAddress), selectedTokenId);
+      const tx = await trazabilidad.transferirAComercio(utils.getAddress(comercioAddress), selectedTokenId);
 
       setLoading(true);
       await tx.wait();

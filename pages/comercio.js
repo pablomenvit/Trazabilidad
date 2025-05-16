@@ -103,22 +103,25 @@ export default function Comercio(props) {
   const putOnSale = async () => {
     try {
       const trazabilidad = await getContract(true);
-      const tx = await trazabilidad.putOnSale(selectedTokenId, utils.parseEther(precioProducto));
+      const tx = await trazabilidad.putOnSale(selectedTokenId, precioProducto);
 
       setLoading(true);
       await tx.wait();
 
     } catch (error) {
       console.log(error);
-      window.alert("Ha habido un errro al poner el token en venta");
+      window.alert("Ha habido un error al poner el token en venta");
     }
   }
+  
 
   const handlePutOnSale = event => {
 
     event.preventDefault();
 
     putOnSale();
+
+ 
 
     setPrevIndex(null);
     setSelectedTokenId('');
@@ -283,11 +286,11 @@ export default function Comercio(props) {
                 <Form.Control
                   placeholder="Introduce el precio de venta para el producto"
                   value={precioProducto}
-                  onChange={event => setPrecioProducto(event.target.value)}
+                  onChange={event => {setPrecioProducto(event.target.value)}}
                 />
               </Form.Group>
               {
-                <Button variant="primary" type="submit" disabled={selectedTokenId == '' || precioProducto == '' || !isNew}>
+                <Button variant="primary" type="submit" disabled={selectedTokenId == '' || precioProducto == ''}>
                   Poner en venta
                 </Button>
               }
