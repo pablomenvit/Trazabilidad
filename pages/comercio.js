@@ -16,10 +16,10 @@ export default function Comercio(props) {
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
   // variables related to mint of token
-  const [productName, setProductName] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [unit, setUnit] = useState('');
-  const [productPrice, setProductPrice] = useState('');
+  const [producto, setProducto] = useState('');
+  const [fertilizante, setFertilizante] = useState('');
+  const [lote, setLote] = useState('');
+  const [precioProducto, setPrecioProducto] = useState('');
   // helpers variables for forms
   const [isNew, setIsNew] = useState(false);
   const [isAccepted, setIsAccepted] = useState(false);
@@ -43,10 +43,10 @@ export default function Comercio(props) {
         const attrs = await trazabilidad.obtenerAtributosToken(tokens[i]);
         res.push({
           tokenId: id,
-          product: attrs[3],
-          quantity: attrs[2],
-          unit: attrs[4],
-          state: attrs[5]
+          producto: attrs[2],
+          fertilizante: attrs[1],
+          lote: attrs[3],
+          estado: attrs[4]
         });
       }
     }
@@ -89,41 +89,21 @@ export default function Comercio(props) {
 
     } catch (error) {
       console.log(error);
-      window.alert("HA habido un error rechazando el token");
+      window.alert("Ha habido un error rechazando el token");
     }
   }
 
-  const mintBaker = async () => {
-    try {
-      const trazabilidad = await getContract(true);
-      const tx = await trazabilidad.mint(selectedTokenId, Date.now(), quantity, productName, unit);
-
-      setLoading(true);
-      await tx.wait();
-
-    } catch (error) {
-      console.log(error);
-      window.alert("There was an error with the minting of the token");
-    }
-  }
 
   const handleMint = event => {
-
-    event.preventDefault();
-
-    mintBaker();
-
+    event.preventDefault();  
     setPrevIndex(null);
-    setSelectedTokenId('');
-    setProductName('');
-    setQuantity('');
-    setUnit('');
+    setSelectedTokenId('');    
   }
 
   const putOnSale = async () => {
     try {
       const trazabilidad = await getContract(true);
-      const tx = await trazabilidad.putOnSale(selectedTokenId, utils.parseEther(productPrice));
+      const tx = await trazabilidad.putOnSale(selectedTokenId, utils.parseEther(precioProducto));
 
       setLoading(true);
       await tx.wait();
@@ -142,7 +122,7 @@ export default function Comercio(props) {
 
     setPrevIndex(null);
     setSelectedTokenId('');
-    setProductPrice('');
+    setPrecioProducto('');
   }
 
   const onClickTokenSelect = (tokenId, index) => {
@@ -171,9 +151,9 @@ export default function Comercio(props) {
   const translateState = (state) => {
     switch (state) {
       case 0:
-        return "New";
+        return "N";
       case 1:
-        return "Delivered";
+        return "NUEVO";
       case 2:
         return "Accepted";
       case 3:
@@ -214,18 +194,18 @@ export default function Comercio(props) {
 
         <div className={styles.title}>
           <img width={100} height={100} src="./bakerColor.png" alt="baker icon" />
-          <h2>Baker User Account</h2>
+          <h2>Comercio</h2>
         </div>
 
         <Table striped bordered hover className={styles.table}>
           <thead>
             <tr>
-              <th>Select</th>
+              <th>Selecciona</th>
               <th>Token ID</th>
-              <th>Product Name</th>
-              <th>Quantity</th>
-              <th>Unit</th>
-              <th>State</th>
+              <th>Nombre del producto</th>
+              <th>Fertilizante</th>
+              <th>Lote</th>
+              <th>Estado</th>
             </tr>
           </thead>
           <tbody>
@@ -234,7 +214,7 @@ export default function Comercio(props) {
                 <tr>
                   <td style={{ '--bs-table-accent-bg': 'white', 'textAlign': 'center' }} colSpan='6'>
                     <img src="./loading.gif" alt="loading..." />
-                    <p className={styles.p_no_margin}>Loading, wait some seconds...</p>
+                    <p className={styles.p_no_margin}>Cargando, espera unos segundos...</p>
                   </td>
                 </tr>
                 :
@@ -257,20 +237,20 @@ export default function Comercio(props) {
                     <td>{item.fertilizante}</td>
                     <td>
                       {
-                        item.state == 1 ?
+                        item.estado == 1 ?
                           <div>
                             <Button
                               className={styles.validateButton}
                               variant="primary"
                               value={item.tokenId}
                               onClick={event => accept(event.target.value)}
-                            >Accept
+                            >Acceptar
                             </Button>
                             <Button
                               variant="danger"
                               value={item.tokenId}
                               onClick={event => reject(event.target.value)}
-                            >Reject
+                            >Rechazar
                             </Button>
                           </div>
                           :
@@ -286,48 +266,7 @@ export default function Comercio(props) {
 
 
         <div className={styles.flexContainer}>
-          <div className={styles.form}>
-            <Form onSubmit={handleMint}>
-              <h4>Mint</h4>
-              {
-                selectedTokenId != '' && isAccepted ?
-                  <p>Token selected for minting</p>
-                  : <p>Select an ACCEPTED token</p>
-              }
-              <Form.Group className="mb-3" controlId="productName">
-                <Form.Label>Product Name</Form.Label>
-                <Form.Control
-                  placeholder="Enter name of product"
-                  value={productName}
-                  onChange={event => setProducto(event.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="quantity">
-                <Form.Label>Quantity</Form.Label>
-                <Form.Control
-                  placeholder="Enter quantity"
-                  value={quantity}
-                  onChange={event => setQuantity(event.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="unit">
-                <Form.Select
-                  value={unit}
-                  onChange={event => setUnit(event.target.value)}>
-                  <option>Select unit</option>
-                  <option value="Kgs">Kgs</option>
-                  <option value="L">L</option>
-                  <option value="Unit">Unit</option>
-                </Form.Select>
-              </Form.Group>
-              {
-                <Button variant="primary" type="submit" disabled={productName == '' || quantity == '' || unit == ''}>
-                  Mint
-                </Button>
-              }
-
-            </Form>
-          </div>
+          
 
           <div className={styles.form}>
             <h4>Precio de venta</h4>
@@ -342,12 +281,12 @@ export default function Comercio(props) {
                 <Form.Label>Precio</Form.Label>
                 <Form.Control
                   placeholder="Introduce el precio de venta para el producto"
-                  value={productPrice}
-                  onChange={event => setProductPrice(event.target.value)}
+                  value={precioProducto}
+                  onChange={event => setPrecioProducto(event.target.value)}
                 />
               </Form.Group>
               {
-                <Button variant="primary" type="submit" disabled={selectedTokenId == '' || productPrice == '' || !isNew}>
+                <Button variant="primary" type="submit" disabled={selectedTokenId == '' || precioProducto == '' || !isNew}>
                   Poner en venta
                 </Button>
               }
