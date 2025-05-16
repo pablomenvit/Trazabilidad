@@ -1,4 +1,4 @@
-export const NFT_CONTRACT_ADDRESS = "0x1d03fb20e3eb9f08b67d98419ca70eca009f4ec4";
+export const NFT_CONTRACT_ADDRESS = "0xdc4f6cc533fdecdd8abe992f8f3b0b1877dcd459";
 export const ABI = [
 	{
 		"inputs": [],
@@ -661,6 +661,24 @@ export const ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_precio",
+				"type": "uint256"
+			}
+		],
+		"name": "putOnSale",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "_direccionUsuario",
 				"type": "address"
@@ -870,7 +888,25 @@ export const ABI = [
 				"type": "uint256"
 			}
 		],
-		"name": "transferirAlSiguiente",
+		"name": "transferirAComercio",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_hacia",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "transferirAtransporte",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -898,4 +934,4 @@ export const ABI = [
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
-];
+]
