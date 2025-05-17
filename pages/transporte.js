@@ -1,6 +1,7 @@
 import { Contract, utils } from "ethers";
 import React, { useEffect, useState } from "react";
 import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
+import Thinkspeak from "./thingspeak";
 // styles and html components
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -119,7 +120,7 @@ export default function Transporte(props) {
         return "Rechazado";
     }
   }
-
+/*
   useEffect(() => {
 
     const transparency = new Contract(NFT_CONTRACT_ADDRESS, ABI, props.provider);
@@ -151,13 +152,13 @@ export default function Transporte(props) {
 
   }, [props])
 
-
+*/
   return (
     <div>
       <div className={styles.main}>
         <div className={styles.title}>
-          <Image width={100} height={100} src="./transporte.png" alt="icono transporte" />
-          <h2>Agricultor</h2>
+          <Image width={100} height={100} src="/transporte.png" alt="icono transporte" />
+          <h2>Transporte</h2>
         </div>
 
         <Table striped bordered hover className={styles.table}>
@@ -176,7 +177,7 @@ export default function Transporte(props) {
             {loading ?
               <tr>
                 <td style={{ '--bs-table-accent-bg': 'white', 'textAlign': 'center' }} colSpan='6'>
-                  <Image width={100} height={20} src="./loading.gif" alt="loading..." />
+                  <Image width={100} height={20} src="/loading.gif" alt="loading..." />
                   <p className={styles.p_no_margin}>Cargando, espera unos segundos...</p>
                 </td>
               </tr>
@@ -206,54 +207,36 @@ export default function Transporte(props) {
           </tbody>
         </Table>
 
+        <div className={styles.flexContainer}>
+            <div className={styles.form}>               
+                {Thinkspeak()}
+            </div>
+        </div>
+
 
         <div className={styles.flexContainer}>
-          <div className={styles.form}>
-            <Form onSubmit={handleMint}>
-              <h4>Minado</h4>
-              <Form.Group className="mb-3" controlId="productName">
-                <Form.Label>Producto</Form.Label>
-                <Form.Control
-                  placeholder="Introduce el producto"
-                  value={producto}
-                  onChange={event => setProducto(event.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="quantity">
-                <Form.Label>Lote</Form.Label>
-                <Form.Control
-                  placeholder="Número de lote"
-                  value={lote}
-                  onChange={event => setLote(event.target.value)}
-                />
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="quantity">
-                <Form.Label>Fertilizante</Form.Label>
-                <Form.Control
-                  placeholder="Fertilizante usado"
-                  value={fertilizante}
-                  onChange={event => setFertilizante(event.target.value)}
-                />
-              </Form.Group>
-              {
-                <Button variant="primary" type="submit" disabled={producto == '' || lote == '' || fertilizante == ''}>
-                  Minar
-                </Button>
-              }
-
-            </Form>
-          </div>
-
+            <div className={styles.form}>
+                <h4>Minado de token</h4>
+                <Form onSubmit={handleMint}>       
+    
+                    <Button style={{ marginRight: '10px' }} variant="primary" type="submit">
+                        Incio Transporte
+                    </Button>
+                    <Button variant="primary" type="submit">
+                        Fin Transporte
+                    </Button>
+                </Form>
+            </div>
           <div className={styles.form}>
             <h4>Transferencias</h4>
-            {
-              <div>
-                <p>Selecciona el token a transferir</p>
-                <Button variant="primary" onClick={transferComercio} disabled={selectedTokenId == ''}>
-                  Transfiere al mercado
-                </Button>
-              </div>
-            }
+              {
+                <div>
+                  <p>Selecciona el token a transferir</p>
+                  <Button variant="primary" onClick={transferComercio} disabled={selectedTokenId == ''}>
+                    Transfiere al mercado
+                  </Button>
+                </div>
+            }   
           </div>
         </div>
 

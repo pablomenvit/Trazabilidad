@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
-export default function thingspeak() {
+export default function Thingspeak() {
   const [thingSpeakValue, setThingSpeakValue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,13 +15,14 @@ export default function thingspeak() {
           throw new Error(errorData.error || `Error al obtener datos: ${response.statusText}`);
         }
         const data = await response.json();
-        // Accede al valor dentro del array 'feeds', que contiene objetos con los valores de los campos
-        if (data.feeds && data.feeds.length > 0) {
-          setThingSpeakValue(data.feeds[0].field1); // Accede al 'field1' del primer (y más reciente) feed
-          console.log("El valor del campo 1 es : ", data.feeds[0].field1);
+        // Accede al valor dentro del array 'feeds' y formatea a un decimal
+        if (data.feeds && data.feeds.length > 0 && data.feeds[0].field1 !== null) {
+          const rawValue = parseFloat(data.feeds[0].field1);
+          setThingSpeakValue(rawValue.toFixed(1));
+          console.log("El valor del campo 1 es : ", rawValue.toFixed(1));
         } else {
           setThingSpeakValue(null);
-          console.log("No se encontraron feeds en la respuesta.");
+          console.log("No se encontraron feeds o el valor es nulo.");
         }
         setError(null);
       } catch (err) {
@@ -35,9 +36,9 @@ export default function thingspeak() {
     fetchData();
 
     // Opcional: Actualizar cada cierto tiempo
-    const intervalId = setInterval(fetchData, 15000); // Cada 15 segundos
+    const intervalId = setInterval(fetchData, 15000);
 
-    return () => clearInterval(intervalId); // Limpiar intervalo al desmontar
+    return () => clearInterval(intervalId);
   }, []);
 
   if (loading) return <p>Cargando datos de ThingSpeak...</p>;
@@ -47,7 +48,7 @@ export default function thingspeak() {
     <div>
       <h1>Valor de ThingSpeak</h1>
       {thingSpeakValue !== null ? (
-        <p>Último valor: {thingSpeakValue}</p>
+        <p>Último valor: {thingSpeakValue} ºC</p>
       ) : (
         <p>No se pudo obtener el valor.</p>
       )}
