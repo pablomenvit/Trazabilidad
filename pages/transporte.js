@@ -17,6 +17,7 @@ export default function Transporte(props) {
   const [tokens, setTokens] = useState([]);
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
+  const [mostrarThingspeak, setMostrarThingspeak] = useState(false);
   // variables related to mint of token
   const [producto, setProducto] = useState('');
   const [lote, setLote] = useState('');
@@ -56,33 +57,14 @@ export default function Transporte(props) {
     setLoading(false);
   }
 
-  const minadoAgricultor = async () => {
-    try {
-      let tokenId = Date.now();
-      const trazabilidad = await getContract(true);
-      const tx = await trazabilidad.minado(0, tokenId, producto, lote, fertilizante);
+  
 
-      setLoading(true);
-      await tx.wait();
-
-    } catch (error) {
-      console.log(error);
-      window.alert("Ha habido un error al minar el token!");
-    }
-  }
-
-  const handleMint = event => {
+  const handleClick = event => {
 
     event.preventDefault();
 
-    minadoAgricultor();
-
-    setPrevIndex(null);
-    setSelectedTokenId('');
-    setLote('');
-    setProducto('');
-    setFertilizante('');
-  }
+    setMostrarThingspeak(true);
+  };
 
   const transferComercio = async () => {
     try {
@@ -207,20 +189,23 @@ export default function Transporte(props) {
           </tbody>
         </Table>
 
+        
         <div className={styles.flexContainer}>
+            {mostrarThingspeak && (
             <div className={styles.form}>               
-                {Thinkspeak()}
+                <Thinkspeak />
             </div>
+            )}
         </div>
-
+        
 
         <div className={styles.flexContainer}>
             <div className={styles.form}>
                 <h4>Minado de token</h4>
-                <Form onSubmit={handleMint}>       
+                <Form>   
     
-                    <Button style={{ marginRight: '10px' }} variant="primary" type="submit">
-                        Incio Transporte
+                    <Button onClick={handleClick} style={{ marginRight: '10px' }} variant="primary" type="submit">
+                        Inicio Transporte
                     </Button>
                     <Button variant="primary" type="submit">
                         Fin Transporte
