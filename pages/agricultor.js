@@ -156,7 +156,7 @@ export default function Agicultor(props) {
     <div>
       <div className={styles.main}>
         <div className={styles.title}>
-          <Image width={100} height={100} src="./agricultor.png" alt="icono agricultor" />
+          <Image width={100} height={100} src="/agricultor.png" alt="icono agricultor" />
           <h2>Agricultor</h2>
         </div>
 
@@ -176,7 +176,7 @@ export default function Agicultor(props) {
             {loading ?
               <tr>
                 <td style={{ '--bs-table-accent-bg': 'white', 'textAlign': 'center' }} colSpan='6'>
-                  <Image src="./loading.gif" alt="loading..." />
+                  <Image width={100} height={20} src="/loading.gif" alt="loading..." />
                   <p className={styles.p_no_margin}>Cargando, espera unos segundos...</p>
                 </td>
               </tr>
