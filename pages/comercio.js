@@ -5,6 +5,7 @@ import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
+import Image from 'next/image';
 import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -100,7 +101,9 @@ export default function Comercio(props) {
     setSelectedTokenId('');    
   }
 
-  const putOnSale = async () => {
+  // al pulsar el boton se asigna el precio al token pero no se envia la propiedad al conrtato, 
+  // se envia al transporte y cuando este termine se pasa al contrato.
+/*  const putOnSale = async () => {
     try {
       const trazabilidad = await getContract(true);
       const tx = await trazabilidad.putOnSale(selectedTokenId, precioProducto);
@@ -113,7 +116,7 @@ export default function Comercio(props) {
       window.alert("Ha habido un error al poner el token en venta");
     }
   }
-  
+  */
 
   const handlePutOnSale = event => {
 
@@ -197,7 +200,7 @@ export default function Comercio(props) {
       <div className={styles.main}>
 
         <div className={styles.title}>
-          <img width={100} height={100} src="./bakerColor.png" alt="baker icon" />
+          <Image width={100} height={100} src="/comercio.png" alt="icono comercio" />
           <h2>Comercio</h2>
         </div>
 

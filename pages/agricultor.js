@@ -5,6 +5,7 @@ import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
+import Image from 'next/image';
 import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -155,7 +156,7 @@ export default function Agicultor(props) {
     <div>
       <div className={styles.main}>
         <div className={styles.title}>
-          <img width={100} height={100} src="./agricultor.png" alt="icono agricultor" />
+          <Image width={100} height={100} src="./agricultor.png" alt="icono agricultor" />
           <h2>Agricultor</h2>
         </div>
 
@@ -175,7 +176,7 @@ export default function Agicultor(props) {
             {loading ?
               <tr>
                 <td style={{ '--bs-table-accent-bg': 'white', 'textAlign': 'center' }} colSpan='6'>
-                  <img src="./loading.gif" alt="loading..." />
+                  <Image src="./loading.gif" alt="loading..." />
                   <p className={styles.p_no_margin}>Cargando, espera unos segundos...</p>
                 </td>
               </tr>
