@@ -1,56 +1,83 @@
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
+import Button from 'react-bootstrap/Button';
+
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 export default function Thingspeak() {
-  const [thingSpeakValue, setThingSpeakValue] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isCollecting, setIsCollecting] = useState(false);
+  const [latestValue, setLatestValue] = useState(null); // Nuevo estado para el último valor
+  const [dataPoints, setDataPoints] = useState([]);
+  const [minValue, setMinValue] = useState(null);
+  const [maxValue, setMaxValue] = useState(null);
+  const intervalId = useRef(null);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        const response = await fetch('https://api.thingspeak.com/channels/2866688/fields/1.json?api_key=H52OAH089BAPDLZC');
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || `Error al obtener datos: ${response.statusText}`);
-        }
-        const data = await response.json();
-        // Accede al valor dentro del array 'feeds' y formatea a un decimal
-        if (data.feeds && data.feeds.length > 0 && data.feeds[0].field1 !== null) {
-          const rawValue = parseFloat(data.feeds[0].field1);
-          setThingSpeakValue(rawValue.toFixed(1));
-          console.log("El valor del campo 1 es : ", rawValue.toFixed(1));
-        } else {
-          setThingSpeakValue(null);
-          console.log("No se encontraron feeds o el valor es nulo.");
-        }
-        setError(null);
-      } catch (err) {
-        setError(err.message);
-        setThingSpeakValue(null);
-      } finally {
-        setLoading(false);
+  const THINGSPEAK_API_KEY = 'H52OAH089BAPDLZC';
+  const THINGSPEAK_CHANNEL_ID = '2866688';
+  const THINGSPEAK_FIELD_NUMBER = '1';
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `https://api.thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/fields/${THINGSPEAK_FIELD_NUMBER}.json?api_key=${THINGSPEAK_API_KEY}&results=1`
+      );
+      const data = await response.json();
+      if (data.feeds && data.feeds.length > 0 && data.feeds[0].field1 !== null) {
+        const newValue = parseFloat(data.feeds[0][`field${THINGSPEAK_FIELD_NUMBER}`]);
+        setLatestValue(newValue); // Actualiza el último valor
+        setDataPoints((prevData) => [...prevData, newValue]);
       }
+    } catch (error) {
+      console.error('Error fetching data from ThingSpeak:', error);
     }
+  };
 
-    fetchData();
+  const startCollection = () => {
+    setIsCollecting(true);
+    setDataPoints([]);
+    setLatestValue(null); // Reinicia el último valor
+    setMinValue(null);
+    setMaxValue(null);
+    intervalId.current = setInterval(fetchData, 15000);
+  };
 
-    // Opcional: Actualizar cada cierto tiempo
-    const intervalId = setInterval(fetchData, 15000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  if (loading) return <p>Cargando datos de ThingSpeak...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const stopCollection = () => {
+    setIsCollecting(false);
+    clearInterval(intervalId.current);
+    if (dataPoints.length > 0) {
+      setMinValue(Math.min(...dataPoints));
+      setMaxValue(Math.max(...dataPoints));
+    }
+  };
 
   return (
     <div>
-      <h1>Valor de ThingSpeak</h1>
-      {thingSpeakValue !== null ? (
-        <p>Último valor: {thingSpeakValue} ºC</p>
-      ) : (
-        <p>No se pudo obtener el valor.</p>
+      <Button variant="primary" onClick={startCollection} disabled={isCollecting}>
+        Inicio
+      </Button>
+      <Button variant="primary" onClick={stopCollection} disabled={!isCollecting}>
+        Fin
+      </Button>
+
+      {isCollecting && <p>Recolección en curso...</p>}
+
+      {latestValue !== null && <p>Último valor: {latestValue}</p>} {/* Muestra el último valor */}
+
+      {dataPoints.length > 0 && (
+        <div>
+          <h3>Datos Recolectados:</h3>
+          <ul>
+            {dataPoints.map((value, index) => (
+              <li key={index}>{value}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {minValue !== null && maxValue !== null && (
+        <div>
+          <p>Valor Mínimo: {minValue}</p>
+          <p>Valor Máximo: {maxValue}</p>
+        </div>
       )}
     </div>
   );

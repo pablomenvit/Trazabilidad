@@ -2,7 +2,7 @@
 
 
 //    Variables Smart Contract
-export const NFT_CONTRACT_ADDRESS = "0xdc4f6cc533fdecdd8abe992f8f3b0b1877dcd459";
+export const NFT_CONTRACT_ADDRESS = "0xbc81d4a8fe66e5ea3245ff54ee4ffce488b5c22f";
 export const ABI = [
 	{
 		"inputs": [],
@@ -590,6 +590,35 @@ export const ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "obtenerTemperatura",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint16",
+				"name": "",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint16",
+				"name": "",
+				"type": "uint16"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "",
 				"type": "address"
@@ -676,6 +705,24 @@ export const ABI = [
 			}
 		],
 		"name": "putOnSale",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_precio",
+				"type": "uint16"
+			}
+		],
+		"name": "putPrecio",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -938,4 +985,4 @@ export const ABI = [
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
-]
+];

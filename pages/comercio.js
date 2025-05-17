@@ -10,20 +10,21 @@ import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 
-export default function Comercio(props) {
+export default function Transporte(props) {
 
   const [loading, setLoading] = useState(false);
   const [tokens, setTokens] = useState([]);
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
   // variables related to mint of token
-  const [producto, setProducto] = useState('');
-  const [fertilizante, setFertilizante] = useState('');
-  const [lote, setLote] = useState('');
+ 
   const [precioProducto, setPrecioProducto] = useState('');
   // helpers variables for forms
   const [isNew, setIsNew] = useState(false);
   const [isAccepted, setIsAccepted] = useState(false);
+
+  const transporteAddress = '0xDfe91ee7f72e6820D2F4e9f1C5A801A85dD4f2ca';
+  
 
   const getContract = async (needSigner = false) => {
     if (needSigner) {
@@ -117,19 +118,31 @@ export default function Comercio(props) {
     }
   }
   */
-
-  const handlePutOnSale = event => {
-
-    event.preventDefault();
-
-    putOnSale();
-
- 
-
-    setPrevIndex(null);
-    setSelectedTokenId('');
-    setPrecioProducto('');
+  const asignarPrecio = async () => {
+    try {
+      const trazabilidad = await getContract(true);
+      const tx = await trazabilidad.putPrecio(selectedTokenId, precioProducto);     
+      await tx.wait();
+      const transport = await trazabilidad.transferirAtransporte(transporteAddress, selectedTokenId);
+      setLoading(true);
+      
+    } catch (error) {
+      console.log(error);
+      window.alert("Ha habido un error al asignar el precio");
+    }
   }
+
+  function handlePutOnSale(event) {
+
+      event.preventDefault();
+
+      asignarPrecio();
+
+
+      setPrevIndex(null);
+      setSelectedTokenId('');
+      setPrecioProducto('');
+    }
 
   const onClickTokenSelect = (tokenId, index) => {
     if (prevIndex == index) {
@@ -155,7 +168,6 @@ export default function Comercio(props) {
   }
 
   const translateState = (estado) => {
-    console.log("El estado de ", producto, " es: ", estado)
     switch (estado) {
       case 0:
         return "Nuevo";
@@ -165,6 +177,8 @@ export default function Comercio(props) {
         return "Aceptado";
       case 3:
         return "Rechazado";
+        case 4:
+        return "En Trasporte";
     }
   }
 

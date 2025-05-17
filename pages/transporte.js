@@ -17,11 +17,10 @@ export default function Transporte(props) {
   const [tokens, setTokens] = useState([]);
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
-  const [mostrarThingspeak, setMostrarThingspeak] = useState(false);
+  
+  
   // variables related to mint of token
-  const [producto, setProducto] = useState('');
-  const [lote, setLote] = useState('');
-  const [fertilizante, setFertilizante] = useState('');
+  
 
   const comercioAddress = "0x71AF60DfAf489E86Ff9dfEEC167D839d0aa0FAe0";
 
@@ -59,17 +58,12 @@ export default function Transporte(props) {
 
   
 
-  const handleClick = event => {
-
-    event.preventDefault();
-
-    setMostrarThingspeak(true);
-  };
 
   const transferComercio = async () => {
     try {
       const trazabilidad = await getContract(true);
-      const tx = await trazabilidad.transferirAComercio(utils.getAddress(comercioAddress), selectedTokenId);
+      const precio = await trazabilidad.getPrice(selectedTokenId);
+      const tx = await trazabilidad.putOnSale(selectedTokenId, precio);
 
       setLoading(true);
       await tx.wait();
@@ -87,6 +81,7 @@ export default function Transporte(props) {
     } else {
       setPrevIndex(index);
       setSelectedTokenId(tokenId);
+   
     }
   }
 
@@ -100,9 +95,11 @@ export default function Transporte(props) {
         return "Aceptado";
       case 3:
         return "Rechazado";
+      case 4:
+        return "En Transporte";
     }
   }
-/*
+
   useEffect(() => {
 
     const transparency = new Contract(NFT_CONTRACT_ADDRESS, ABI, props.provider);
@@ -134,7 +131,7 @@ export default function Transporte(props) {
 
   }, [props])
 
-*/
+
   return (
     <div>
       <div className={styles.main}>
@@ -160,7 +157,7 @@ export default function Transporte(props) {
               <tr>
                 <td style={{ '--bs-table-accent-bg': 'white', 'textAlign': 'center' }} colSpan='6'>
                   <Image width={100} height={20} src="/loading.gif" alt="loading..." />
-                  <p className={styles.p_no_margin}>Cargando, espera unos segundos...</p>
+                  <p className={styles.p_no_margin}>Cargando, espere unos segundos...</p>
                 </td>
               </tr>
               :
@@ -190,28 +187,14 @@ export default function Transporte(props) {
         </Table>
 
         
-        <div className={styles.flexContainer}>
-            {mostrarThingspeak && (
-            <div className={styles.form}>               
-                <Thinkspeak />
-            </div>
-            )}
-        </div>
+       
         
 
         <div className={styles.flexContainer}>
-            <div className={styles.form}>
-                <h4>Minado de token</h4>
-                <Form>   
-    
-                    <Button onClick={handleClick} style={{ marginRight: '10px' }} variant="primary" type="submit">
-                        Inicio Transporte
-                    </Button>
-                    <Button variant="primary" type="submit">
-                        Fin Transporte
-                    </Button>
-                </Form>
-            </div>
+          <div className={styles.form}>
+            <h4>Monitorizar temperatura</h4>
+                <Thinkspeak />
+          </div>
           <div className={styles.form}>
             <h4>Transferencias</h4>
               {
