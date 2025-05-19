@@ -2,7 +2,7 @@
 
 
 //    Variables Smart Contract
-export const NFT_CONTRACT_ADDRESS = "0xbc81d4a8fe66e5ea3245ff54ee4ffce488b5c22f";
+export const NFT_CONTRACT_ADDRESS = "0xbf2762e83dd29875cafd60a429cdb694d092af98";
 export const ABI = [
 	{
 		"inputs": [],
@@ -723,6 +723,29 @@ export const ABI = [
 			}
 		],
 		"name": "putPrecio",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_temperaturaMin",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_temperaturaMax",
+				"type": "uint16"
+			}
+		],
+		"name": "putTemperatura",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
