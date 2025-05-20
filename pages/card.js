@@ -46,30 +46,32 @@ export default function Card(props) {
   const translateState = (state) => {
     switch (state) {
       case 0:
-        return "Mint";
+        return "Nuevo";
       case 1:
-        return "Delivered";
+        return "Entregado";
       case 2:
-        return "Accepted";
+        return "Aceptado";
       case 3:
-        return "Rejected";
+        return "Rechazado";
       case 4:
-        return "Used";
+        return "En transporte";
       case 5:
-        return "On Sale";
+        return "En venta";
       case 6:
-        return "Bought";
+        return "Comprado";
     }
   };
 
   const translateRole = (role) => {
     switch (role) {
       case 0:
-        return "Farmer";
+        return "Agricultor";
       case 1:
-        return "Baker";
+        return "Comercio";
       case 2:
-        return "Customer";
+        return "Transporte";
+      case 3:
+        return "Consumidor";
     }
   }
 
@@ -93,7 +95,7 @@ export default function Card(props) {
         </Title>
         <div style={{ display: "flex" }}>
           <Typography variant="subtitle1" color="white" noWrap>
-            <strong>Time:</strong>
+            <strong>Fecha:</strong>
           </Typography>
           <Typography variant="subtitle1" color="white" noWrap>
             &nbsp;{getMyDate(tokenData.blockTimestamp)}
@@ -103,67 +105,59 @@ export default function Card(props) {
           <div>
             <div style={{ display: "flex" }}>
               <Typography variant="subtitle1" color="white" noWrap>
-                <strong>Product:</strong>
+                <strong>Producto:</strong>
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
-                &nbsp;{tokenData.attrs.quantity} {tokenData.attrs.unit} of {tokenData.attrs.product}
+                &nbsp;{tokenData.attrs.producto}
+              </Typography>
+              <Typography variant="subtitle1" color="white" noWrap>
+                 &nbsp;&nbsp;&nbsp;<strong>Fertilizante:</strong>
+              </Typography>
+              <Typography variant="subtitle1" color="white" noWrap>
+                &nbsp;{tokenData.attrs.fertilizante}
               </Typography>
             </div>
             <div style={{ display: "flex" }}>
               <Typography variant="subtitle1" color="white" noWrap>
-                <strong>Origin:</strong>
+                <strong>Lote Nº:</strong>
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
-                &nbsp;{Number(tokenData.attrs.origin)}
+                &nbsp;{tokenData.attrs.lote}
               </Typography>
             </div>
-            <div style={{ display: "flex" }}>
+            
+           <div style={{ display: "flex" }}>
               <Typography variant="subtitle1" color="white" noWrap>
-                <strong>State:</strong>
+                <strong>Entidad:</strong>
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
-                &nbsp;{translateState(tokenData.attrs.currentState)}
-              </Typography>
-            </div>
-            <div style={{ display: "flex" }}>
-              <Typography variant="subtitle1" color="white" noWrap>
-                <strong>Manufacturer:</strong>
-              </Typography>
-              <Typography variant="subtitle1" color="white" noWrap>
-                &nbsp;{tokenData.user.name}, {translateRole(tokenData.user.role)}
+                &nbsp;{tokenData.user.nombre}, &nbsp;&nbsp;&nbsp;{translateRole(tokenData.user.role)}
               </Typography>
             </div>
-            <div style={{ display: "flex" }}>
-              <Typography variant="subtitle1" color="white" noWrap>
-                <strong>Made in:</strong>
-              </Typography>
-              <Typography variant="subtitle1" color="white" noWrap>
-                &nbsp;{tokenData.user.location}
-              </Typography>
-            </div>
+            
           </div>
           :
           <div style={{ display: "flex" }}>
             <Typography variant="subtitle1" color="white" noWrap>
-              <strong>Responsible:</strong>
+              <strong>Entidad:</strong>
             </Typography>
             <Typography variant="subtitle1" color="white" noWrap>
-              &nbsp;{tokenData.user.name}, {translateRole(tokenData.user.role)}
+              &nbsp;{tokenData.user.nombre}, {translateRole(tokenData.user.role)}
             </Typography>
           </div>
         }
 
         <Grid>
           <Typography variant="h6" color="white" component="p">
-            Tx Data
+            Informacion de la transacción
           </Typography>
           <Typography variant="body2" color="white" component="p">
-            Block Number: {tokenData.blockNumber}
+            Número de bloque: {tokenData.blockNumber}
           </Typography>
           <CopyToClipboard text={tokenData.txHash} onCopy={handleCopyClick}>
             <Button style={{ 'marginTop': '2%', 'marginBottom': '2%' }} variant="primary" >
               <Typography variant="body2" color="text.secondary.contrastText" component="p">
-                {isCopied ? 'Copied!' : 'Copy Hash'}
+                {isCopied ? 'Copiado!' : 'Copiar Hash'}
               </Typography>
             </Button>
           </CopyToClipboard>

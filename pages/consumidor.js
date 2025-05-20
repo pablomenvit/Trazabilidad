@@ -1,12 +1,13 @@
 import { Contract, utils } from "ethers";
 import React, { useEffect, useState } from "react";
 import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
-// styles and html components
+// Estilos HTML
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Image from 'next/image';
 import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Card from './card';
@@ -30,38 +31,39 @@ export default function Farmer(props) {
 
   const getContract = async (needSigner = false) => {
     if (needSigner) {
-      const signer = props.provider.getSigner();
+      const signer = props.provider.getSigner();      
       return new Contract(NFT_CONTRACT_ADDRESS, ABI, signer);
     }
     return new Contract(NFT_CONTRACT_ADDRESS, ABI, props.provider);
   }
 
   const getTokens = async (alsoBought = false) => {
-    const transparency = await getContract();
-    const tokens = await transparency.connect(NFT_CONTRACT_ADDRESS).getTokenIds();
-    const tokensAvailable = await getAttrs([], transparency, tokens, false);
+    const trazabilidad = await getContract();
+    const tokens = await trazabilidad.connect(NFT_CONTRACT_ADDRESS).getTokenIds();
+    const tokensAvailable = await getAttrs([], trazabilidad, tokens, false);
     setTokensIdsAvailable(tokensAvailable);
     setLoadingAvailable(false);
 
     if (alsoBought) {
-      const transparency = await getContract(true);
-      const tokens = await transparency.getTokenIds();
-      const tokensBought = await getAttrs([], transparency, tokens, alsoBought);
+      const trazabilidad = await getContract(true);
+      const tokens = await trazabilidad.getTokenIds();
+      const tokensBought = await getAttrs([], trazabilidad, tokens, alsoBought);
       setTokensIdsBought(tokensBought);
       setLoadingBought(false);
     }
   }
 
-  const getAttrs = async (aux, transparency, tokens, bought) => {
+  const getAttrs = async (aux, trazabilidad, tokens, bought) => {
     for (var i = 0; i < tokens.length; i++) {
       var id = tokens[i].toNumber();
       if (id != 0) {
-        const attrs = await transparency.getTokenAttrs(tokens[i]);
+        const attrs = await trazabilidad.obtenerAtributosToken(tokens[i]);
         if (bought) {
-          aux.push({ tokenId: id, product: attrs[3], quantity: attrs[2], unit: attrs[4], state: attrs[5] });
+          aux.push({ tokenId: id, producto: attrs[2], fertilizante: attrs[3], lote: attrs[1], estado: attrs[5] });
         } else {
-          const price = utils.formatEther(Number(await getPrice(id)));
-          aux.push({ tokenId: id, product: attrs[3], quantity: attrs[2], unit: attrs[4], state: attrs[5], price: price });
+          
+          const price = utils.formatEther(await getPrice(id));
+          aux.push({ tokenId: id, producto: attrs[2], fertilizante: attrs[3], lote: attrs[1], estado: attrs[5], precio: price });
         }
       }
     }
@@ -70,19 +72,19 @@ export default function Farmer(props) {
 
   const getPrice = async (tokenId) => {
     try {
-      const transparency = await getContract();
-      return await transparency.getPrice(tokenId);
+      const trazabilidad = await getContract();
+      return await trazabilidad.getPrice(tokenId);
     } catch (error) {
       console.log(error);
-      window.alert("There was an error getting the price of the token");
+      window.alert("Hay un error obteniendo el precio del token");
     }
   }
 
   const buy = async (tokenId) => {
     try {
-      const transparency = await getContract(true);
-      const price = await transparency.getPrice(tokenId);
-      const tx = await transparency.buy(tokenId, { value: price });
+      const trazabilidad = await getContract(true);
+      const price = await trazabilidad.getPrice(tokenId);
+      const tx = await trazabilidad.buy(tokenId, { value: price });
 
       setLoadingAvailable(true);
       setLoadingBought(true);
@@ -90,7 +92,7 @@ export default function Farmer(props) {
 
     } catch (error) {
       console.log(error);
-      window.alert("There was an error when buying a token");
+      window.alert("Hay un error comprando el token");
     }
   }
 
@@ -98,36 +100,32 @@ export default function Farmer(props) {
 
     try {
 
-      const transparency = await getContract();
+      const trazabilidad = await getContract();
       const event = events[pos];
-      console.log(event);
-      const user = await transparency.getUserData(event.args._from);
-
+      //console.log(event);
+      const user = await trazabilidad.obtenerInformacionUsuario(event.args._desde);
+      
       const completeData = {
-        operation: event.args._state,
+        operation: event.args._estado,
         tokenId: event.args._tokenId,
         blockTimestamp: (await event.getBlock(event.blockNumber)).timestamp * 1000,
         blockNumber: event.blockNumber,
         txHash: event.transactionHash
       }
 
-      if (event.args._state == 0) {
+      if (event.args._estado == 0) {
 
-        const attrs = await transparency.getTokenAttrs(Number(event.args._tokenId));
+        const attrs = await trazabilidad.obtenerAtributosToken(Number(event.args._tokenId));
 
-        if (attrs[1] != 0) {
-          const filter = transparency.filters.Transaction(null, Number(attrs[1]), null);
-          const events = await transparency.queryFilter(filter, 0, 'latest');
-          await getHistory(arrayCards, events, 0, order + events.length);
+        
           if (selectedTokenId == event.args._tokenId) {
             visitedMint = true;
           }
-        }
-
-        completeData.attrs = { origin: attrs[1], quantity: attrs[2], product: attrs[3], unit: attrs[4], currentState: attrs[5] };
-        completeData.user = { name: user[0], location: user[1], registeredDate: user[2], role: user[3] };
+                  
+        completeData.attrs = {fertilizante: attrs[3], producto: attrs[2], lote: attrs[1], currentState: attrs[4] };
+        completeData.user = { nombre: user[0], role: user[1] };
       } else {
-        completeData.user = { name: user[0], location: user[1], registeredDate: user[2], role: user[3] };
+        completeData.user = { nombre: user[0], role: user[1] };
       }
 
       if (pos == events.length - 1) {
@@ -145,7 +143,7 @@ export default function Farmer(props) {
 
     } catch (error) {
       console.log(error);
-      window.alert("There was an error getting the history");
+      window.alert("Hay un error al obtener el historial");
     }
   }
 
@@ -186,7 +184,7 @@ export default function Farmer(props) {
 
   useEffect(() => {
 
-    const transparency = new Contract(NFT_CONTRACT_ADDRESS, ABI, props.provider);
+    const trazabilidad = new Contract(NFT_CONTRACT_ADDRESS, ABI, props.provider);
 
     var currentAccount;
     props.provider.send("eth_requestAccounts", []).then(function (result) {
@@ -200,12 +198,12 @@ export default function Farmer(props) {
     }
     fetchTokens();
 
-    transparency.on(transparency.filters.Transaction(null, null, [5]), async (_from, _tokenId, _state) => {
+    trazabilidad.on(trazabilidad.filters.Transaccion(null, null, [5]), async (_from, _tokenId, _state) => {
       setLoadingAvailable(true);
       await getTokens();
     });
 
-    transparency.on(transparency.filters.Transaction(currentAccount, null, [6]), async (_from, _tokenId, _state) => {
+    trazabilidad.on(trazabilidad.filters.Transaccion(currentAccount, null, [6]), async (_from, _tokenId, _state) => {
       setLoadingAvailable(true);
       setLoadingBought(true);
       await getTokens(true);
@@ -221,9 +219,9 @@ export default function Farmer(props) {
 
     async function fetchHistory() {
       if (selectedTokenId != '') {
-        const transparency = await getContract();
-        const filter = transparency.filters.Transaction(null, Number(selectedTokenId), null);
-        const events = await transparency.queryFilter(filter, 0, 'latest');
+        const trazabilidad = await getContract();
+        const filter = trazabilidad.filters.Transaccion(null, Number(selectedTokenId), null);
+        const events = await trazabilidad.queryFilter(filter, 0, 'latest');
         setCards([]);
         setLoadingHistory(true);
         getHistory([], events, 0, 0);
@@ -247,22 +245,22 @@ export default function Farmer(props) {
       <div className={styles.main}>
 
         <div className={styles.title}>
-          <img width={100} height={100} src="./customerColor.png" alt="customer icon" />
-          <h2>Customer User Account</h2>
+          <Image width={100} height={100} src="/customerColor.png" alt="customer icon" />
+          <h2>Consumidor</h2>
         </div>
 
-        <h3 className={styles.subtitle}>Products Available</h3>
+        <h3 className={styles.subtitle}>Productos disponibles</h3>
         <hr className={styles.hrCustomer}></hr>
         <Table striped bordered hover className={styles.table}>
           <thead>
             <tr>
-              <th>View History</th>
+              <th>Ver historial</th>
               <th>Token ID</th>
-              <th>Product Name</th>
-              <th>Quantity</th>
-              <th>Unit</th>
-              <th>Price</th>
-              <th>Action</th>
+              <th>Producto</th>
+              <th>Fertilizante</th>
+              <th>Lote</th>
+              <th>Precio</th>
+              <th>Accion</th>
             </tr>
           </thead>
           <tbody>
@@ -270,8 +268,8 @@ export default function Farmer(props) {
               loadingAvailable ?
                 <tr>
                   <td style={{ '--bs-table-accent-bg': 'white', 'textAlign': 'center' }} colSpan='7'>
-                    <img src="./loading.gif" alt="loading.." />
-                    <p className={styles.p_no_margin}>Loading, wait some seconds...</p>
+                    <Image width={100} height={30} src="/loading.gif" alt="cargando.." />
+                    <p className={styles.p_no_margin}>Cargando, espere unos segunods..</p>
                   </td>
                 </tr>
                 :
@@ -291,13 +289,13 @@ export default function Farmer(props) {
                       }
                     </td>
                     <td>{item.tokenId}</td>
-                    <td>{item.product}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.unit}</td>
-                    <td>{item.price}</td>
+                    <td>{item.producto}</td>
+                    <td>{item.fertilizante}</td>
+                    <td>{item.lote}</td>
+                    <td>{item.precio}</td>
                     <td>
                       <Button value={item.tokenId} variant="primary" onClick={event => buy(event.target.value)}>
-                        Buy
+                        Comprar
                       </Button>
                     </td>
                   </tr>
@@ -305,16 +303,16 @@ export default function Farmer(props) {
           </tbody>
         </Table>
 
-        <h3>My Bought Products</h3>
+        <h3>Mis productos comprados</h3>
         <hr className={styles.hrCustomer}></hr>
         <Table striped bordered hover className={styles.table}>
           <thead>
             <tr>
-              <th>View History</th>
+              <th>Ver historial</th>
               <th>Token ID</th>
-              <th>Product Name</th>
-              <th>Quantity</th>
-              <th>Unit</th>
+              <th>Producto</th>
+              <th>Fertilizante</th>
+              <th>Lote</th>
             </tr>
           </thead>
           <tbody>
@@ -322,8 +320,8 @@ export default function Farmer(props) {
               loadingBought ?
                 <tr>
                   <td style={{ '--bs-table-accent-bg': 'white', 'textAlign': 'center' }} colSpan='6'>
-                    <img src="./loading.gif" alt="loading..." />
-                    <p className={styles.p_no_margin}>Loading, wait some seconds...</p>
+                    <Image width={100} height={30} src="/loading.gif" alt="cargando..." />
+                    <p className={styles.p_no_margin}>Cargando, espera unos segundos...</p>
                   </td>
                 </tr>
                 :
@@ -343,29 +341,29 @@ export default function Farmer(props) {
                       }
                     </td>
                     <td>{item.tokenId}</td>
-                    <td>{item.product}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.unit}</td>
+                    <td>{item.producto}</td>
+                    <td>{item.fertilizante}</td>
+                    <td>{item.lote}</td>
                   </tr>
                 ))}
           </tbody>
         </Table>
 
-        <h3 style={{ 'textAlign': 'center', 'paddingTop': '2%' }}>History</h3>
+        <h3 style={{ 'textAlign': 'center', 'paddingTop': '2%' }}>Historial</h3>
         {
           selectedTokenId != '' ?
             <div className={styles.flexContainerHistory}>
               {loadingHistory ?
                 <div style={{ 'textAlign': 'center' }}>
-                  <img src="./loading.gif" alt="loading..." />
-                  <p className={styles.p_no_margin}>Loading, wait some seconds...</p>
+                  <Image width={100} height={30} src="/loading.gif" alt="cargando..." />
+                  <p className={styles.p_no_margin}>Cargando, espera unos segunods...</p>
                 </div>
                 :
                 boxCards
               }
             </div>
             :
-            <p className={styles.p_no_history}>No product selected</p>
+            <p className={styles.p_no_history}>No hay producros seleccionados</p>
         }
 
       </div>
