@@ -72,7 +72,7 @@ export default function Home() {
       const transparency = new Contract(NFT_CONTRACT_ADDRESS, ABI, provider);
 
       if (await transparency.owner() == currentAccount) {
-        return 3;
+        return 4;
       } else {
         const role = await transparency.getUserRole(currentAccount);
         return role;
@@ -137,6 +137,10 @@ export default function Home() {
           <Transporte provider={provider}/>
         );  
       case 3:
+        return (
+          <Consumidor provider={provider} />
+        );
+      default :
         return (
           <Owner provider={provider} />
         );
