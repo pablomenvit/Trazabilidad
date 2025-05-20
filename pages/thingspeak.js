@@ -1,14 +1,21 @@
 import { useState, useRef } from 'react';
+import { Contract, utils } from "ethers";
+import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
 import Button from 'react-bootstrap/Button';
 
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-export default function Thingspeak() {
+export default function Thingspeak(props) {
+  const {provider} = props;
+  const {tokenId} = props;
+ // const [temperaturaGLocal, setTemperaturaGLocal] = useState(props));
   const [isCollecting, setIsCollecting] = useState(false);
   const [latestValue, setLatestValue] = useState(null); // Nuevo estado para el último valor
   const [dataPoints, setDataPoints] = useState([]);
   const [minValue, setMinValue] = useState(null);
   const [maxValue, setMaxValue] = useState(null);
+  
+  
   const intervalId = useRef(null);
 
   const THINGSPEAK_API_KEY = 'H52OAH089BAPDLZC';
@@ -39,7 +46,26 @@ export default function Thingspeak() {
     setMaxValue(null);
     intervalId.current = setInterval(fetchData, 15000);
   };
+    
+   const temperaturasEnBlockchain = async () => {  
+    try {
+      const signer = provider.getSigner();
+      const minValueBN = utils.parseUnits(minValue !== null ? minValue.toString() : '0', 0);
+      const maxValueBN = utils.parseUnits(minValue !== null ? maxValue.toString() : '0', 0);
+      const trazabilidad = new Contract(NFT_CONTRACT_ADDRESS, ABI, signer);
+      const temperaturas = await trazabilidad.putTemperatura(tokenId, minValueBN, maxValueBN);      
 
+     
+      await temperaturas.wait();
+   //   setTemperaturaGLocal(true);
+      window.alert("Temperatura guardada en la blockchain");
+
+    } catch (error) {
+      console.log(error);
+      window.alert("Error al aguradar la temperatura en la blockchain");
+    }
+  }
+  
   const stopCollection = () => {
     setIsCollecting(false);
     clearInterval(intervalId.current);
@@ -47,14 +73,16 @@ export default function Thingspeak() {
       setMinValue(Math.min(...dataPoints));
       setMaxValue(Math.max(...dataPoints));
     }
+
+    temperaturasEnBlockchain(minValue, maxValue);
   };
 
   return (
     <div>
-      <Button variant="primary" onClick={startCollection} disabled={isCollecting}>
+      <Button variant="primary" onClick={startCollection} disabled={isCollecting || tokenId == ''}>
         Inicio
       </Button>
-      <Button variant="primary" onClick={stopCollection} disabled={!isCollecting}>
+      <Button variant="primary" onClick={stopCollection} disabled={!isCollecting || tokenId == ''}>
         Fin
       </Button>
 

@@ -17,6 +17,7 @@ export default function Transporte(props) {
   const [tokens, setTokens] = useState([]);
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
+  const [temperaturaGuardada, setTemperaturaGuardada] = useState(false);
   
   
   // variables related to mint of token
@@ -193,14 +194,14 @@ export default function Transporte(props) {
         <div className={styles.flexContainer}>
           <div className={styles.form}>
             <h4>Monitorizar temperatura</h4>
-                <Thinkspeak />
+                <Thinkspeak provider={props.provider} tokenId={selectedTokenId} /* estadoTemperatura={temperaturaGuardada}*/ />
           </div>
           <div className={styles.form}>
             <h4>Transferencias</h4>
               {
                 <div>
                   <p>Selecciona el token a transferir</p>
-                  <Button variant="primary" onClick={transferComercio} disabled={selectedTokenId == ''}>
+                  <Button variant="primary" onClick={transferComercio} disabled={selectedTokenId == '' }>
                     Transfiere al mercado
                   </Button>
                 </div>

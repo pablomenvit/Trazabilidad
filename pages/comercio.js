@@ -234,7 +234,7 @@ export default function Transporte(props) {
               loading ?
                 <tr>
                   <td style={{ '--bs-table-accent-bg': 'white', 'textAlign': 'center' }} colSpan='6'>
-                    <img src="./loading.gif" alt="loading..." />
+                    <Image width={100} height={20} src="/loading.gif" alt="loading..." />
                     <p className={styles.p_no_margin}>Cargando, espera unos segundos...</p>
                   </td>
                 </tr>
