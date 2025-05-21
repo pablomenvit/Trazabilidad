@@ -12,7 +12,7 @@ import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Card from './card';
 
-export default function Farmer(props) {
+export default function Consumidor(props) {
 
   // variables related to tables
   const [loadingAvailable, setLoadingAvailable] = useState(false);
@@ -113,7 +113,7 @@ export default function Farmer(props) {
         txHash: event.transactionHash
       }
 
-      if (event.args._estado == 0) {
+
 
         const attrs = await trazabilidad.obtenerAtributosToken(Number(event.args._tokenId));
 
@@ -122,15 +122,19 @@ export default function Farmer(props) {
             visitedMint = true;
           }
                   
-        completeData.attrs = {fertilizante: attrs[3], producto: attrs[2], lote: attrs[1], currentState: attrs[4] };
+        completeData.attrs = { fertilizante: attrs[3], producto: attrs[2], lote: attrs[1], currentState: attrs[4] };
         completeData.user = { nombre: user[0], role: user[1] };
-      } else {
-        completeData.user = { nombre: user[0], role: user[1] };
-      }
-
+        
+        
+      const price = await trazabilidad.getPrice(event.args._tokenId);
+      const temperatura = await trazabilidad.obtenerTemperatura(event.args._tokenId);
+      completeData.precio = parseInt(price.toString());
+      console.log("la temperatura es: ",temperatura[1]);
+      completeData.temperaturaMin = temperatura[1];
+      completeData.temperaturaMax = temperatura[2];
       if (pos == events.length - 1) {
         uniqueTokenIds.push(Number(event.args._tokenId));
-        arrayCards.push(<Card key={order} /*group={event.args._tokenId}*/ data={completeData} />);
+        arrayCards.push(<Card key={order} data={completeData} />);
 
         if (visitedMint) {
           setCards(arrayCards);
@@ -138,7 +142,7 @@ export default function Farmer(props) {
         return arrayCards;
       }
 
-      arrayCards.push(<Card key={order} /*group={event.args._tokenId}*/ data={completeData} />);
+      arrayCards.push(<Card key={order} data={completeData} />);
       await getHistory(arrayCards, events, pos + 1, order + 1);
 
     } catch (error) {

@@ -136,15 +136,54 @@ export default function Card(props) {
             </div>
             
           </div>
-          :
-          <div style={{ display: "flex" }}>
+          : tokenData.operation == 2 ?
+          <><div style={{ display: "flex" }}>
             <Typography variant="subtitle1" color="white" noWrap>
               <strong>Entidad:</strong>
             </Typography>
             <Typography variant="subtitle1" color="white" noWrap>
-              &nbsp;{tokenData.user.nombre}, {translateRole(tokenData.user.role)}
+              &nbsp;{tokenData.user.nombre}, &nbsp;&nbsp;&nbsp;{translateRole(tokenData.user.role)}
             </Typography>
-          </div>
+          </div><div style={{ display: "flex" }}>
+              <Typography variant="subtitle1" color="white" noWrap>
+                <strong>Precio establecido:</strong>
+              </Typography>
+              <Typography variant="subtitle1" color="white" noWrap>
+                &nbsp;{tokenData.precio}
+              </Typography>
+            </div></>
+          : tokenData.operation == 4 ?
+          <><div style={{ display: "flex" }}>
+            <Typography variant="subtitle1" color="white" noWrap>
+              <strong>Entidad:</strong>
+            </Typography>
+            <Typography variant="subtitle1" color="white" noWrap>
+              &nbsp;{tokenData.user.nombre}, &nbsp;&nbsp;&nbsp;{translateRole(tokenData.user.role)}
+            </Typography>
+          </div><div style={{ display: "flex" }}>
+              <Typography variant="subtitle1" color="white" noWrap>
+                <strong>Transportado a una temperatura minima de:</strong>
+              </Typography>
+              <Typography variant="subtitle1" color="white" noWrap>
+                &nbsp;&nbsp;{tokenData.temperaturaMin}&nbsp;ºC
+              </Typography>
+              <Typography variant="subtitle1" color="white" noWrap>
+                &nbsp;&nbsp;<strong> y a una temperatura maxima de:</strong>
+              </Typography>
+              <Typography variant="subtitle1" color="white" noWrap>
+                &nbsp;&nbsp;{tokenData.temperaturaMax}&nbsp;ºC
+              </Typography>
+            </div></>
+          : 
+          <div style={{ display: "flex" }}>
+              <Typography variant="subtitle1" color="white" noWrap>
+                <strong>Ultima opcion:</strong>
+              </Typography>
+              <Typography variant="subtitle1" color="white" noWrap>
+                
+              </Typography>
+            </div>
+          
         }
 
         <Grid>

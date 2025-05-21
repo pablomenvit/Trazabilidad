@@ -8,7 +8,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 export default function Thingspeak(props) {
   const {provider} = props;
   const {tokenId} = props;
- // const [temperaturaGLocal, setTemperaturaGLocal] = useState(props));
+ 
   const [isCollecting, setIsCollecting] = useState(false);
   const [latestValue, setLatestValue] = useState(null); // Nuevo estado para el último valor
   const [dataPoints, setDataPoints] = useState([]);
@@ -34,7 +34,7 @@ export default function Thingspeak(props) {
         setDataPoints((prevData) => [...prevData, newValue]);
       }
     } catch (error) {
-      console.error('Error fetching data from ThingSpeak:', error);
+      console.error('Error obteniendo datos de ThingSpeak:', error);
     }
   };
 
@@ -47,34 +47,51 @@ export default function Thingspeak(props) {
     intervalId.current = setInterval(fetchData, 15000);
   };
     
-   const temperaturasEnBlockchain = async () => {  
-    try {
-      const signer = provider.getSigner();
-      const minValueBN = utils.parseUnits(minValue !== null ? minValue.toString() : '0', 0);
-      const maxValueBN = utils.parseUnits(minValue !== null ? maxValue.toString() : '0', 0);
-      const trazabilidad = new Contract(NFT_CONTRACT_ADDRESS, ABI, signer);
-      const temperaturas = await trazabilidad.putTemperatura(tokenId, minValueBN, maxValueBN);      
+   const temperaturasEnBlockchain = async (minTemp, maxTemp) => {
+  try {
+    const signer = provider.getSigner();
+    //const minValueBN = utils.parseUnits(minTemp !== null && minTemp !== undefined ? minTemp.toString() : '0', 1);
+    //const maxValueBN = utils.parseUnits(maxTemp !== null && maxTemp !== undefined ? maxTemp.toString() : '0', 1);
+      const minValueBN = minTemp.toString(); // Convierte el número a string
+      const maxValueBN = maxTemp.toString(); // Convierte el número a string
 
-     
-      await temperaturas.wait();
-   //   setTemperaturaGLocal(true);
-      window.alert("Temperatura guardada en la blockchain");
+    window.alert(`Temperatura mínima: ${minValueBN}, Temperatura máxima: ${maxValueBN}`);
 
-    } catch (error) {
-      console.log(error);
-      window.alert("Error al aguradar la temperatura en la blockchain");
-    }
+    // ¡DESCOMENTA ESTA LÍNEA!
+    const trazabilidad = new Contract(NFT_CONTRACT_ADDRESS, ABI, signer);
+    const temperaturas = await trazabilidad.putTemperatura(tokenId, minValueBN, maxValueBN);
+
+    await temperaturas.wait(); // Ahora 'temperaturas' estará definida
+
+    window.alert(`Temperaturas guardadas correctamente.`); // Puedes añadir esto para confirmar
+
+  } catch (error) {
+    console.error("Error al guardar la temperatura en la blockchain:", error); // Usar console.error para visibilidad
+    window.alert("Error al guardar la temperatura en la blockchain");
   }
+}
   
   const stopCollection = () => {
     setIsCollecting(false);
     clearInterval(intervalId.current);
+
+    // Calcula los valores MIN y MAX AQUI
+    let calculatedMin = 0; // Valores por defecto en caso de no haber datos
+    let calculatedMax = 0;
+
     if (dataPoints.length > 0) {
-      setMinValue(Math.min(...dataPoints));
-      setMaxValue(Math.max(...dataPoints));
+      calculatedMin = Math.min(...dataPoints);
+      calculatedMax = Math.max(...dataPoints);
+
+      // Opcional: Actualiza el estado para que se refleje en la UI, pero no se usan para la llamada a blockchain
+      setMinValue(calculatedMin);
+      setMaxValue(calculatedMax);
+    } else {
+      console.warn("No se recolectaron datos de temperatura. Enviando 0 como min y max.");
     }
 
-    temperaturasEnBlockchain(minValue, maxValue);
+    // Llama a la función con los valores CALCULADOS DIRECTAMENTE, NO con el estado que aún es null
+    temperaturasEnBlockchain(calculatedMin, calculatedMax);
   };
 
   return (

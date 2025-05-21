@@ -1,8 +1,5 @@
-
-
-
 //    Variables Smart Contract
-export const NFT_CONTRACT_ADDRESS = "0xbf2762e83dd29875cafd60a429cdb694d092af98";
+export const NFT_CONTRACT_ADDRESS = "0xca7723fa470c3965a75565354ba46b053f738e99";
 export const ABI = [
 	{
 		"inputs": [],
@@ -315,14 +312,14 @@ export const ABI = [
 				"type": "uint8"
 			},
 			{
-				"internalType": "uint16",
+				"internalType": "string",
 				"name": "temperaturaMin",
-				"type": "uint16"
+				"type": "string"
 			},
 			{
-				"internalType": "uint16",
+				"internalType": "string",
 				"name": "temperaturaMax",
-				"type": "uint16"
+				"type": "string"
 			},
 			{
 				"internalType": "string",
@@ -350,6 +347,19 @@ export const ABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "compra",
+		"outputs": [],
+		"stateMutability": "payable",
 		"type": "function"
 	},
 	{
@@ -482,11 +492,6 @@ export const ABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_desdeTokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
 				"name": "_aTokenId",
 				"type": "uint256"
 			},
@@ -603,14 +608,14 @@ export const ABI = [
 				"type": "address"
 			},
 			{
-				"internalType": "uint16",
+				"internalType": "string",
 				"name": "",
-				"type": "uint16"
+				"type": "string"
 			},
 			{
-				"internalType": "uint16",
+				"internalType": "string",
 				"name": "",
-				"type": "uint16"
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -717,9 +722,9 @@ export const ABI = [
 				"type": "uint256"
 			},
 			{
-				"internalType": "uint16",
+				"internalType": "uint256",
 				"name": "_precio",
-				"type": "uint16"
+				"type": "uint256"
 			}
 		],
 		"name": "putPrecio",
@@ -735,14 +740,14 @@ export const ABI = [
 				"type": "uint256"
 			},
 			{
-				"internalType": "uint16",
+				"internalType": "string",
 				"name": "_temperaturaMin",
-				"type": "uint16"
+				"type": "string"
 			},
 			{
-				"internalType": "uint16",
+				"internalType": "string",
 				"name": "_temperaturaMax",
-				"type": "uint16"
+				"type": "string"
 			}
 		],
 		"name": "putTemperatura",
