@@ -130,7 +130,7 @@ export default function Farmer(props) {
 
       if (pos == events.length - 1) {
         uniqueTokenIds.push(Number(event.args._tokenId));
-        arrayCards.push(<Card key={order} group={event.args._tokenId} data={completeData} />);
+        arrayCards.push(<Card key={order} /*group={event.args._tokenId}*/ data={completeData} />);
 
         if (visitedMint) {
           setCards(arrayCards);
@@ -138,7 +138,7 @@ export default function Farmer(props) {
         return arrayCards;
       }
 
-      arrayCards.push(<Card key={order} group={event.args._tokenId} data={completeData} />);
+      arrayCards.push(<Card key={order} /*group={event.args._tokenId}*/ data={completeData} />);
       await getHistory(arrayCards, events, pos + 1, order + 1);
 
     } catch (error) {
@@ -158,9 +158,9 @@ export default function Farmer(props) {
           <hr style={{ 'marginBottom': '5%', 'marginTop': '0%' }}></hr>
           <Grid container direction="column">
             {cards.sort((a, b) => a.key > b.key ? 1 : -1).map((card, index) => (
-              card.props.group == tokenIds[i] ?
+             
                 <Grid item key={index} width="100%">{card}</Grid>
-                : null
+             
             ))
             }
           </Grid>
