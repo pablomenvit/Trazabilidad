@@ -91,7 +91,7 @@ export default function Card(props) {
     }, 1500);
 
   }
-
+  const miURL = "https://sepolia.etherscan.io/tx/" + props.data.txHash;
   const getHtmlComponent = () => {
 
     const tokenData = props.data;
@@ -218,6 +218,18 @@ export default function Card(props) {
               </Typography>
             </Button>
           </CopyToClipboard>
+          &nbsp;&nbsp;
+          <Button
+          style={{ 'marginTop': '2%', 'marginBottom': '2%' }}
+        variant="primary" 
+        href={miURL} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+      ><Typography variant="body2" color="text.secondary.contrastText" component="p">
+                {'Ver en Etherscan'}
+              </Typography>
+        
+      </Button>
         </Grid>
       </Item>
     );
