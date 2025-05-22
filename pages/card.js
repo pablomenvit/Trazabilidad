@@ -75,6 +75,14 @@ export default function Card(props) {
     }
   }
 
+  const calculaReparto = (precioV) => {
+    return {
+      agricultor: precioV * 0.35,
+      comercio: precioV * 0.5,
+      transporte: precioV * 0.15,
+    }
+  }
+
   const handleCopyClick = () => {
 
     setIsCopied(true);
@@ -150,6 +158,16 @@ export default function Card(props) {
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
                 &nbsp;{tokenData.precio}
+              </Typography>
+            </div>
+            <div style={{ display: "flex" }}>
+              <Typography variant="subtitle1" color="white" noWrap>
+                <strong>Repartido de la siguiente manera:</strong>
+              </Typography>
+              <Typography variant="subtitle1" color="white" noWrap>
+                &nbsp;&nbsp;<strong>Agricultor</strong> &nbsp;{(calculaReparto(tokenData.precio).agricultor).toFixed(2)} €
+                &nbsp;&nbsp;<strong>Transporte</strong> &nbsp;{(calculaReparto(tokenData.precio).transporte).toFixed(2)} €
+                &nbsp;&nbsp;<strong>Comercio</strong> &nbsp;{(calculaReparto(tokenData.precio).comercio).toFixed(2)} €
               </Typography>
             </div></>
           : tokenData.operation == 4 ?

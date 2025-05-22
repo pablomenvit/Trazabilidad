@@ -69,13 +69,15 @@ export default function Home() {
   const getUserRole = async (currentAccount) => {
     try {
       const provider = await getProviderOrSigner();
-      const transparency = new Contract(NFT_CONTRACT_ADDRESS, ABI, provider);
+      const trazabilidad = new Contract(NFT_CONTRACT_ADDRESS, ABI, provider);
 
-      if (await transparency.owner() == currentAccount) {
+      if (await trazabilidad.owner() == currentAccount) {
         return 4;
       } else {
-        const role = await transparency.getUserRole(currentAccount);
+        const role = await trazabilidad.getUserRole(currentAccount);
+        console.log("El rol en getUserRole es: ", role);
         return role;
+        
       }
     } catch (error) {
       console.log(error);
@@ -123,6 +125,8 @@ export default function Home() {
   }, [userLogged])
   
   const showUserUI = () => {
+    console.log("El provider es: ", userLogged);
+    
     switch (userLogged) {
       case 0:
         return (
@@ -140,7 +144,7 @@ export default function Home() {
         return (
           <Consumidor provider={provider} />
         );
-      default :
+      case 4:
         return (
           <Owner provider={provider} />
         );
@@ -158,7 +162,7 @@ export default function Home() {
           showUI ?
             showUserUI()
             :
-            <h3 className={`${styles.main} ${styles.connect_wallet}`}>Connecting to a wallet...</h3>
+            <h3 className={`${styles.main} ${styles.connect_wallet}`}>Conectando una cartera...</h3>
         }
       </div>
     </div>
