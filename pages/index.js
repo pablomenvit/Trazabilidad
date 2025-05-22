@@ -55,7 +55,7 @@ export default function Home() {
     window.ethereum.on("accountsChanged", async function (accounts) {
       if (accounts[0]) {
         const currentAccount = utils.getAddress(accounts[0]);
-        const role = await getUserRole(currentAccount);
+        const role = await getUserRol(currentAccount);
         setUserLogged(role);
       } else {
         setWalletConnected(false);
@@ -66,18 +66,18 @@ export default function Home() {
     
   }
 
-  const getUserRole = async (currentAccount) => {
+  const getUserRol = async (currentAccount) => {
     try {
       const provider = await getProviderOrSigner();
       const trazabilidad = new Contract(NFT_CONTRACT_ADDRESS, ABI, provider);
 
       if (await trazabilidad.owner() == currentAccount) {
-        return 4;
+       return 4;
       } else {
-        const role = await trazabilidad.getUserRole(currentAccount);
-        console.log("El rol en getUserRole es: ", role);
-        return role;
+        const role = await trazabilidad.getUserRol(currentAccount);
         
+        return role;
+      
       }
     } catch (error) {
       console.log(error);
@@ -88,7 +88,7 @@ export default function Home() {
     try {
       const accounts = await provider.send("eth_requestAccounts", []);
       const currentAccount = utils.getAddress(accounts[0]);
-      const role = await getUserRole(currentAccount);
+      const role = await getUserRol(currentAccount);
       setUserLogged(role);
     } catch (error) {
       console.log(error);
@@ -125,7 +125,7 @@ export default function Home() {
   }, [userLogged])
   
   const showUserUI = () => {
-    console.log("El provider es: ", userLogged);
+    
     
     switch (userLogged) {
       case 0:

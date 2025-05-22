@@ -17,7 +17,7 @@ export default function Transporte(props) {
   const [tokens, setTokens] = useState([]);
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
-  const [temperaturaGuardada, setTemperaturaGuardada] = useState(false);
+ // const [temperaturaGuardada, setTemperaturaGuardada] = useState(false);
   
   
   // variables related to mint of token
@@ -60,11 +60,10 @@ export default function Transporte(props) {
   
 
 
-  const transferComercio = async () => {
+  const putOnMercado = async () => {
     try {
       const trazabilidad = await getContract(true);
-      const precio = await trazabilidad.getPrice(selectedTokenId);
-      const tx = await trazabilidad.putOnSale(selectedTokenId, precio);
+      const tx = await trazabilidad.putOnSale(selectedTokenId);
 
       setLoading(true);
       await tx.wait();
@@ -201,7 +200,7 @@ export default function Transporte(props) {
               {
                 <div>
                   <p>Selecciona el token a transferir</p>
-                  <Button variant="primary" onClick={transferComercio} disabled={selectedTokenId == '' }>
+                  <Button variant="primary" onClick={putOnMercado} disabled={selectedTokenId == '' }>
                     Transfiere al mercado
                   </Button>
                 </div>

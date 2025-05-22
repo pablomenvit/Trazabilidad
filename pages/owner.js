@@ -11,7 +11,7 @@ export default function Owner (props) {
   const [address, setAddress] = useState('');
   const [nombre, setNombre] = useState('');
   const [role, setRole] = useState('');
-  const [location, setLocation] = useState('');
+ // const [location, setLocation] = useState('');
 
   const getContract = async (needSigner = false) => {
     if (needSigner) {
@@ -23,12 +23,14 @@ export default function Owner (props) {
 
   const translateRole = (role) => {
     switch (role) {
-      case "Farmer":
+      case "Agricultor":
         return 0;
-      case "Baker":
+      case "Comercio":
         return 1;
-      case "Customer":
+      case "Transporte":
         return 2;
+      case "Consumidor":
+        return 3;
     }
   }
 

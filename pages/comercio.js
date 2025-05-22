@@ -121,9 +121,9 @@ export default function Transporte(props) {
   const asignarPrecio = async () => {
     try {
       const trazabilidad = await getContract(true);
-      const tx = await trazabilidad.putPrecio(selectedTokenId, precioProducto);     
+      const tx = await trazabilidad.putPrecio(selectedTokenId, precioProducto.toString(2));     
       await tx.wait();
-      const transport = await trazabilidad.transferirAtransporte(transporteAddress, selectedTokenId);
+      const transport = await trazabilidad.transferirATransporte(transporteAddress, selectedTokenId);
       setLoading(true);
       
     } catch (error) {

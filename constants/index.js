@@ -1,5 +1,5 @@
 //    Variables Smart Contract
-export const NFT_CONTRACT_ADDRESS = "0xca7723fa470c3965a75565354ba46b053f738e99";
+export const NFT_CONTRACT_ADDRESS = "0xc5b06a9aa7d8f5b38faea95b57af718b9a50debe";
 export const ABI = [
 	{
 		"inputs": [],
@@ -297,11 +297,6 @@ export const ABI = [
 				"type": "address"
 			},
 			{
-				"internalType": "uint8",
-				"name": "lote",
-				"type": "uint8"
-			},
-			{
 				"internalType": "string",
 				"name": "producto",
 				"type": "string"
@@ -310,6 +305,11 @@ export const ABI = [
 				"internalType": "enum TrazabilidadAB.Estado",
 				"name": "estado",
 				"type": "uint8"
+			},
+			{
+				"internalType": "string",
+				"name": "fertilizante",
+				"type": "string"
 			},
 			{
 				"internalType": "string",
@@ -322,9 +322,9 @@ export const ABI = [
 				"type": "string"
 			},
 			{
-				"internalType": "string",
-				"name": "fertilizante",
-				"type": "string"
+				"internalType": "uint8",
+				"name": "lote",
+				"type": "uint8"
 			}
 		],
 		"stateMutability": "view",
@@ -357,7 +357,7 @@ export const ABI = [
 				"type": "uint256"
 			}
 		],
-		"name": "compra",
+		"name": "buy",
 		"outputs": [],
 		"stateMutability": "payable",
 		"type": "function"
@@ -453,7 +453,7 @@ export const ABI = [
 				"type": "address"
 			}
 		],
-		"name": "getUserRole",
+		"name": "getUserRol",
 		"outputs": [
 			{
 				"internalType": "enum TrazabilidadAB.Role",
@@ -545,14 +545,14 @@ export const ABI = [
 				"type": "address"
 			},
 			{
-				"internalType": "uint8",
-				"name": "",
-				"type": "uint8"
-			},
-			{
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			},
+			{
+				"internalType": "uint8",
+				"name": "",
+				"type": "uint8"
 			},
 			{
 				"internalType": "string",
@@ -602,11 +602,6 @@ export const ABI = [
 		],
 		"name": "obtenerTemperatura",
 		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
 			{
 				"internalType": "string",
 				"name": "",
@@ -681,31 +676,7 @@ export const ABI = [
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "precios",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
 				"name": "_tokenId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_precio",
 				"type": "uint256"
 			}
 		],
@@ -741,12 +712,12 @@ export const ABI = [
 			},
 			{
 				"internalType": "string",
-				"name": "_temperaturaMin",
+				"name": "_tMin",
 				"type": "string"
 			},
 			{
 				"internalType": "string",
-				"name": "_temperaturaMax",
+				"name": "_tMax",
 				"type": "string"
 			}
 		],
@@ -985,7 +956,7 @@ export const ABI = [
 				"type": "uint256"
 			}
 		],
-		"name": "transferirAtransporte",
+		"name": "transferirATransporte",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
