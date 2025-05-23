@@ -91,7 +91,7 @@ export default function Transporte(props) {
       setSnackbarOpen(true);
       setLoading(true);
       await tx.wait();
-
+      
     } catch (error) {
       console.log(error);
       

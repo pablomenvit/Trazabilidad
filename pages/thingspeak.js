@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Contract, utils } from "ethers";
+import { Contract} from "ethers";
 import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
 import Button from 'react-bootstrap/Button';
 
@@ -17,7 +17,7 @@ export default function Thingspeak(props) {
   const {tokenId} = props;
  
   const [isCollecting, setIsCollecting] = useState(false);
-  const [latestValue, setLatestValue] = useState(null); // Nuevo estado para el último valor
+  const [latestValue, setLatestValue] = useState(null); 
   const [dataPoints, setDataPoints] = useState([]);
   const [minValue, setMinValue] = useState(null);
   const [maxValue, setMaxValue] = useState(null);
@@ -51,7 +51,7 @@ export default function Thingspeak(props) {
       const data = await response.json();
       if (data.feeds && data.feeds.length > 0 && data.feeds[0].field1 !== null) {
         const newValue = parseFloat(data.feeds[0][`field${THINGSPEAK_FIELD_NUMBER}`]);
-        setLatestValue(newValue); // Actualiza el último valor
+        setLatestValue(newValue); 
         setDataPoints((prevData) => [...prevData, newValue]);
       }
     } catch (error) {
@@ -62,7 +62,7 @@ export default function Thingspeak(props) {
   const startCollection = () => {
     setIsCollecting(true);
     setDataPoints([]);
-    setLatestValue(null); // Reinicia el último valor
+    setLatestValue(null); 
     setMinValue(null);
     setMaxValue(null);
     intervalId.current = setInterval(fetchData, 15000);
@@ -72,8 +72,8 @@ export default function Thingspeak(props) {
   try {
     const signer = provider.getSigner();
     
-      const minValueBN = minTemp.toString(); // Convierte el número a string
-      const maxValueBN = maxTemp.toString(); // Convierte el número a string
+      const minValueBN = minTemp.toString(); 
+      const maxValueBN = maxTemp.toString(); 
 
     
     setSnackbarMessage(`Guardando temperaturas en la blockchain...`);
@@ -102,22 +102,22 @@ export default function Thingspeak(props) {
     setIsCollecting(false);
     clearInterval(intervalId.current);
 
-    // Calcula los valores MIN y MAX AQUI
-    let calculatedMin = 0; // Valores por defecto en caso de no haber datos
+  
+    let calculatedMin = 0; 
     let calculatedMax = 0;
 
     if (dataPoints.length > 0) {
       calculatedMin = Math.min(...dataPoints);
       calculatedMax = Math.max(...dataPoints);
 
-      // Opcional: Actualiza el estado para que se refleje en la UI, pero no se usan para la llamada a blockchain
+      
       setMinValue(calculatedMin);
       setMaxValue(calculatedMax);
     } else {
       console.warn("No se recolectaron datos de temperatura. Enviando 0 como min y max.");
     }
 
-    // Llama a la función con los valores CALCULADOS DIRECTAMENTE, NO con el estado que aún es null
+    
     temperaturasEnBlockchain(calculatedMin, calculatedMax);
   };
 
@@ -132,7 +132,7 @@ export default function Thingspeak(props) {
 
       {isCollecting && <p>Recolección en curso...</p>}
 
-      {latestValue !== null && <p>Último valor: {latestValue}</p>} {/* Muestra el último valor */}
+      {latestValue !== null && <p>Último valor: {latestValue}</p>}
 
       {dataPoints.length > 0 && (
         <div>

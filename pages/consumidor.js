@@ -1,7 +1,7 @@
 import { Contract, utils } from "ethers";
 import React, { useEffect, useState } from "react";
 import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
-// Estilos HTML
+// Estilos 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
@@ -15,21 +15,21 @@ import Card from './card';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-// Componente Alert personalizado para Snackbar (para usar el Alert de MUI)
+// Componente Alert personalizado para Snackbar 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 export default function Consumidor(props) {
 
-  // variables related to tables
+
   const [loadingAvailable, setLoadingAvailable] = useState(false);
   const [loadingBought, setLoadingBought] = useState(false);
   const [tokensAvailable, setTokensIdsAvailable] = useState([]);
   const [tokensBought, setTokensIdsBought] = useState([]);
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
-  // variables related to history
+  
   const [boxCards, setBoxCards] = useState(null);
   const [cards, setCards] = useState([]);
   const [uniqueTokenIds, setUniqueTokenIds] = useState([]);
@@ -129,7 +129,7 @@ export default function Consumidor(props) {
 
       const trazabilidad = await getContract();
       const event = events[pos];
-      //console.log(event);
+      
       const user = await trazabilidad.obtenerInformacionUsuario(event.args._desde);
       
       const completeData = {
