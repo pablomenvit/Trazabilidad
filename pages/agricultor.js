@@ -363,7 +363,7 @@ export default function Agricultor(props) {
                                 </tr>
                                 :
                                 tokens.map((item) => (
-                                    <tr key={item.tokenId}> {/* Usar item.tokenId como key */}
+                                    <tr key={item.tokenId}> 
                                         <td>
                                             <Form.Check
                                                 type='radio'
