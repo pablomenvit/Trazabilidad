@@ -180,13 +180,13 @@ export default function Card(props) {
             </Typography>
           </div><div style={{ display: "flex" }}>
               <Typography variant="subtitle1" color="white" noWrap>
-                <strong>Transportado a una temperatura minima de:</strong>
+                <strong>Se ha transportado entre una temperatura de:</strong>
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
                 &nbsp;&nbsp;{tokenData.temperaturaMin}&nbsp;ºC
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
-                &nbsp;&nbsp;<strong> y a una temperatura maxima de:</strong>
+                &nbsp;&nbsp;<strong> y de:</strong>
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
                 &nbsp;&nbsp;{tokenData.temperaturaMax}&nbsp;ºC
