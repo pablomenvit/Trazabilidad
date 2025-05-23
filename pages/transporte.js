@@ -10,6 +10,14 @@ import Image from 'next/image';
 import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
+// --- Importaciones de Material-UI ---
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+// Componente Alert personalizado para Snackbar (para usar el Alert de MUI)
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function Transporte(props) {
 
@@ -17,13 +25,26 @@ export default function Transporte(props) {
   const [tokens, setTokens] = useState([]);
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
- // const [temperaturaGuardada, setTemperaturaGuardada] = useState(false);
+
+ 
+ // --- Estado para la Snackbar/Alert de MUI ---
+     const [snackbarOpen, setSnackbarOpen] = useState(false);
+     const [snackbarMessage, setSnackbarMessage] = useState('');
+     const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success', 'info', 'warning', 'error' 
   
-  
-  // variables related to mint of token
+
   
 
   const comercioAddress = "0x71AF60DfAf489E86Ff9dfEEC167D839d0aa0FAe0";
+
+  // --- Función para cerrar la Snackbar ---
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
+    // --- Fin de Función para cerrar la Snackbar ---
 
 
   const getContract = async (needSigner = false) => {
@@ -45,8 +66,8 @@ export default function Transporte(props) {
         const attrs = await trazabilidad.obtenerAtributosToken(tokens[i]);
         res.push({
           tokenId: id,
-          producto: attrs[2],
-          lote: attrs[1],
+          producto: attrs[1],
+          lote: attrs[2],
           fertilizante: attrs[3], 
           estado: attrs[4],
         });
@@ -55,7 +76,7 @@ export default function Transporte(props) {
 
     setTokens(res);
     setLoading(false);
-  }
+  } 
 
   
 
@@ -64,24 +85,36 @@ export default function Transporte(props) {
     try {
       const trazabilidad = await getContract(true);
       const tx = await trazabilidad.putOnSale(selectedTokenId);
-
+      
+      setSnackbarMessage(`Transfiriendo token ${selectedTokenId} al mercado...`);
+      setSnackbarSeverity('info');
+      setSnackbarOpen(true);
       setLoading(true);
       await tx.wait();
 
     } catch (error) {
       console.log(error);
-      window.alert("Error al transferir el token");
+      
+    } finally {
+      setLoading(false);
+      setSnackbarMessage('Token transferido al mercado');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
     }
   }
 
+ 
   const onClickTokenSelect = (tokenId, index) => {
-    if (prevIndex == index) {
+    
+    
+    if (prevIndex == index) { 
       setPrevIndex(null);
       setSelectedTokenId('');
+      
     } else {
       setPrevIndex(index);
       setSelectedTokenId(tokenId);
-   
+      
     }
   }
 
@@ -118,11 +151,17 @@ export default function Transporte(props) {
     transparency.on(transparency.filters.Transaccion(currentAccount, null, 0), async (_from, _tokenId, _state) => {
       setLoading(true);
       await getTokens();
+      setSnackbarMessage(`¡Nuevo token (ID: ${_tokenId.toNumber()}) minado para ti!`);
+      setSnackbarSeverity('info');
+      setSnackbarOpen(true);
     });
 
     transparency.on(transparency.filters.Transaccion(comercioAddress, null, [1, 3]), async (_from, _tokenId, _state) => {
       setLoading(true);
       await getTokens();
+      setSnackbarMessage(`Token (ID: ${_tokenId.toNumber()}) entregado al comercio.`);
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
     });
 
     return () => {
@@ -193,22 +232,32 @@ export default function Transporte(props) {
         <div className={styles.flexContainer}>
           <div className={styles.form}>
             <h4>Monitorizar temperatura</h4>
-                <Thinkspeak provider={props.provider} tokenId={selectedTokenId} /* estadoTemperatura={temperaturaGuardada}*/ />
+            
+                <Thinkspeak provider={props.provider} tokenId={selectedTokenId} />
+                
           </div>
           <div className={styles.form}>
             <h4>Transferencias</h4>
               {
                 <div>
                   <p>Selecciona el token a transferir</p>
-                  <Button variant="primary" onClick={putOnMercado} disabled={selectedTokenId == '' }>
+                  <Button variant="primary" onClick={putOnMercado} disabled={selectedTokenId == '' || loading} className={styles.button}>
                     Transfiere al mercado
                   </Button>
+
                 </div>
             }   
           </div>
         </div>
 
       </div>
+      
+                  <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                      <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%', zIndex: 9999 }}>
+                          {snackbarMessage}
+                      </Alert>
+                  </Snackbar>
+                  
     </div>
   )
 }

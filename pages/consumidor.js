@@ -12,6 +12,14 @@ import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Card from './card';
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+// Componente Alert personalizado para Snackbar (para usar el Alert de MUI)
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function Consumidor(props) {
 
   // variables related to tables
@@ -26,8 +34,21 @@ export default function Consumidor(props) {
   const [cards, setCards] = useState([]);
   const [uniqueTokenIds, setUniqueTokenIds] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  // --- Estado para la Snackbar/Alert de MUI ---
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success', 'info', 'warning', 'error' 
+
   var visitedMint = false;
 
+  // --- Función para cerrar la Snackbar ---
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
+    // --- Fin de Función para cerrar la Snackbar ---
 
   const getContract = async (needSigner = false) => {
     if (needSigner) {
@@ -59,11 +80,11 @@ export default function Consumidor(props) {
       if (id != 0) {
         const attrs = await trazabilidad.obtenerAtributosToken(tokens[i]);
         if (bought) {
-          aux.push({ tokenId: id, producto: attrs[2], fertilizante: attrs[3], lote: attrs[1], estado: attrs[5] });
+          aux.push({ tokenId: id, producto: attrs[1], fertilizante: attrs[3], lote: attrs[2], estado: attrs[5] });
         } else {
           
           const price = utils.formatEther(await getPrice(id));
-          aux.push({ tokenId: id, producto: attrs[2], fertilizante: attrs[3], lote: attrs[1], estado: attrs[5], precio: price });
+          aux.push({ tokenId: id, producto: attrs[1], fertilizante: attrs[3], lote: attrs[2], estado: attrs[5], precio: price*1000000000000000000 });
         }
       }
     }
@@ -85,14 +106,20 @@ export default function Consumidor(props) {
       const trazabilidad = await getContract(true);
       const price = await trazabilidad.getPrice(tokenId);
       const tx = await trazabilidad.buy(tokenId, { value: price });
-
+      setSnackbarMessage(`Comprando el token: ${tokenId}`);
+      setSnackbarSeverity('info');
+      setSnackbarOpen(true);
       setLoadingAvailable(true);
       setLoadingBought(true);
       await tx.wait();
-
+      setSnackbarMessage(`Ha comprado el token: ${tokenId}`);
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
     } catch (error) {
       console.log(error);
-      window.alert("Hay un error comprando el token");
+      setSnackbarMessage(`Ha habido un error comprando el token: ${tokenId}`);
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
   }
 
@@ -128,7 +155,7 @@ export default function Consumidor(props) {
         
       const price = await trazabilidad.getPrice(event.args._tokenId);
       const temperatura = await trazabilidad.obtenerTemperatura(event.args._tokenId);
-      completeData.precio = parseInt(price.toString());
+      completeData.precio = parseInt(price.toString(10));
       
       completeData.temperaturaMin = temperatura[0];
       completeData.temperaturaMax = temperatura[1];
@@ -371,6 +398,11 @@ export default function Consumidor(props) {
         }
 
       </div>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%', zIndex: 9999 }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   )
 }

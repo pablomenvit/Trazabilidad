@@ -1,10 +1,17 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Contract, utils } from "ethers";
 import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
 import Button from 'react-bootstrap/Button';
 
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+// --- Importaciones de Material-UI ---
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
+// Componente Alert personalizado para Snackbar (para usar el Alert de MUI)
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 export default function Thingspeak(props) {
   const {provider} = props;
   const {tokenId} = props;
@@ -14,6 +21,11 @@ export default function Thingspeak(props) {
   const [dataPoints, setDataPoints] = useState([]);
   const [minValue, setMinValue] = useState(null);
   const [maxValue, setMaxValue] = useState(null);
+ 
+  // --- Estado para la Snackbar/Alert de MUI ---
+       const [snackbarOpen, setSnackbarOpen] = useState(false);
+       const [snackbarMessage, setSnackbarMessage] = useState('');
+       const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success', 'info', 'warning', 'error' 
   
   
   const intervalId = useRef(null);
@@ -21,6 +33,15 @@ export default function Thingspeak(props) {
   const THINGSPEAK_API_KEY = 'H52OAH089BAPDLZC';
   const THINGSPEAK_CHANNEL_ID = '2866688';
   const THINGSPEAK_FIELD_NUMBER = '1';
+
+  // --- Función para cerrar la Snackbar ---
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
+    // --- Fin de Función para cerrar la Snackbar ---
 
   const fetchData = async () => {
     try {
@@ -50,24 +71,30 @@ export default function Thingspeak(props) {
    const temperaturasEnBlockchain = async (minTemp, maxTemp) => {
   try {
     const signer = provider.getSigner();
-    //const minValueBN = utils.parseUnits(minTemp !== null && minTemp !== undefined ? minTemp.toString() : '0', 1);
-    //const maxValueBN = utils.parseUnits(maxTemp !== null && maxTemp !== undefined ? maxTemp.toString() : '0', 1);
+    
       const minValueBN = minTemp.toString(); // Convierte el número a string
       const maxValueBN = maxTemp.toString(); // Convierte el número a string
 
-    window.alert(`Temperatura mínima: ${minValueBN}, Temperatura máxima: ${maxValueBN}`);
+    
+    setSnackbarMessage(`Guardando temperaturas en la blockchain...`);
+      setSnackbarSeverity('info');
+      setSnackbarOpen(true);
 
-    // ¡DESCOMENTA ESTA LÍNEA!
+    
     const trazabilidad = new Contract(NFT_CONTRACT_ADDRESS, ABI, signer);
     const temperaturas = await trazabilidad.putTemperatura(tokenId, minValueBN, maxValueBN);
 
-    await temperaturas.wait(); // Ahora 'temperaturas' estará definida
-
-    window.alert(`Temperaturas guardadas correctamente.`); // Puedes añadir esto para confirmar
-
+    await temperaturas.wait(); 
+    
+    setSnackbarMessage(`Temperaturas guardadas en la blockchain para el token ${tokenId}`);
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
   } catch (error) {
-    console.error("Error al guardar la temperatura en la blockchain:", error); // Usar console.error para visibilidad
+    console.error("Error al guardar la temperatura en la blockchain:", error);
     window.alert("Error al guardar la temperatura en la blockchain");
+    setSnackbarMessage("Error al guardar la temperatura en la blockchain");
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
   }
 }
   
@@ -124,6 +151,11 @@ export default function Thingspeak(props) {
           <p>Valor Máximo: {maxValue}</p>
         </div>
       )}
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%', zIndex: 9999 }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

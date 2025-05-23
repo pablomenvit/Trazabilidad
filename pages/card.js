@@ -116,7 +116,7 @@ export default function Card(props) {
                 <strong>Producto:</strong>
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
-                &nbsp;{tokenData.attrs.producto}
+                &nbsp;{tokenData.attrs.lote}
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
                  &nbsp;&nbsp;&nbsp;<strong>Fertilizante:</strong>
@@ -130,7 +130,7 @@ export default function Card(props) {
                 <strong>Lote Nº:</strong>
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
-                &nbsp;{tokenData.attrs.lote}
+                &nbsp;{tokenData.attrs.producto}
               </Typography>
             </div>
             
@@ -157,7 +157,7 @@ export default function Card(props) {
                 <strong>Precio establecido:</strong>
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
-                &nbsp;{tokenData.precio}
+                &nbsp;{tokenData.precio} €
               </Typography>
             </div>
             <div style={{ display: "flex" }}>
@@ -192,16 +192,36 @@ export default function Card(props) {
                 &nbsp;&nbsp;{tokenData.temperaturaMax}&nbsp;ºC
               </Typography>
             </div></>
-          : 
+          : tokenData.operation == 5 ?
+           
           <div style={{ display: "flex" }}>
               <Typography variant="subtitle1" color="white" noWrap>
-                <strong>Ultima opcion:</strong>
+                <strong>Producto ofrecido al mercado</strong>
               </Typography>
               <Typography variant="subtitle1" color="white" noWrap>
-                
+                &nbsp;&nbsp;{tokenData.attrs.lote}
               </Typography>
             </div>
           
+          : tokenData.operation == 6 ?
+           
+          <div style={{ display: "flex" }}>
+              <Typography variant="subtitle1" color="white" noWrap>
+                <strong>Comprado por:</strong>
+              </Typography>
+              <Typography variant="subtitle1" color="white" noWrap>
+                &nbsp;&nbsp;{tokenData.user.nombre}
+              </Typography>
+            </div>
+            :
+          <div style={{ display: "flex" }}>
+              <Typography variant="subtitle1" color="white" noWrap>
+                <strong>Entregado a:</strong>
+              </Typography>
+              <Typography variant="subtitle1" color="white" noWrap>
+                &nbsp;&nbsp;{tokenData.user.nombre}
+              </Typography>
+            </div>
         }
 
         <Grid>

@@ -12,7 +12,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 // --- Importaciones de Material-UI ---
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-// --- Fin de Importaciones de Material-UI ---
+
 
 // Componente Alert personalizado para Snackbar (para usar el Alert de MUI)
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -35,7 +35,7 @@ export default function Agricultor(props) {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success', 'info', 'warning', 'error'
-    // --- Fin de Estado para Snackbar ---
+   
 
     const comercioAddress = "0x71AF60DfAf489E86Ff9dfEEC167D839d0aa0FAe0";
 
@@ -85,16 +85,16 @@ export default function Agricultor(props) {
                 }
             }
             setTokens(res);
-            console.log("Tokens cargados:", res); // DEBUG: ver los tokens y sus estados
+            console.log("Tokens cargados:", res); 
         } catch (error) {
             console.error("Error al obtener los tokens:", error);
             setSnackbarMessage("Error al cargar los tokens: " + (error.reason || error.message || "Error desconocido."));
             setSnackbarSeverity('error');
             setSnackbarOpen(true);
         } finally {
-            setLoading(false); // Siempre desactiva el loading
+            setLoading(false); 
         }
-    }, [props.provider]); // Dependencia del useCallback
+    }, [props.provider]); 
 
     const minadoAgricultor = async () => {
         setLoading(true);
@@ -449,13 +449,13 @@ export default function Agricultor(props) {
 
             </div>
 
-            {/* --- Snackbar de Material-UI: Asegúrate de que esto esté en el return! --- */}
+            
             <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
                 <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%', zIndex: 9999 }}>
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
-            {/* --- Fin de Snackbar --- */}
+            
 
         </div>
     )
