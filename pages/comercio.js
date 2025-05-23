@@ -9,6 +9,12 @@ import Image from 'next/image';
 import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+// Componente Alert personalizado para Snackbar
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export default function Transporte(props) {
 
@@ -16,14 +22,18 @@ export default function Transporte(props) {
   const [tokens, setTokens] = useState([]);
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
-  // variables related to mint of token
- 
+   
   const [precioProducto, setPrecioProducto] = useState('');
-  // helpers variables for forms
+  
   const [isNew, setIsNew] = useState(false);
   const [isAccepted, setIsAccepted] = useState(false);
+  const [precioAsignado, setPrecioAsignado] = useState(false);
 
-  const transporteAddress = '0xDfe91ee7f72e6820D2F4e9f1C5A801A85dD4f2ca';
+ const [snackbarOpen, setSnackbarOpen] = useState(false);
+ const [snackbarMessage, setSnackbarMessage] = useState('');
+ const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success', 'info', 'warning', 'error' 
+
+ const transporteAddress = '0xDfe91ee7f72e6820D2F4e9f1C5A801A85dD4f2ca';
   
 
   const getContract = async (needSigner = false) => {
@@ -71,9 +81,15 @@ export default function Transporte(props) {
     try {
       const trazabilidad = await getContract(true);
       const tx = await trazabilidad.accept(tokenId);
+      setSnackbarMessage(`Aceptando token ${tokenId}...`);
+      setSnackbarSeverity('info');
+      setSnackbarOpen(true);
 
       setLoading(true);
       await tx.wait();
+      setSnackbarMessage(`Token ${tokenId} aceptado exitosamente!`);
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
 
     } catch (error) {
       console.log(error);
@@ -102,34 +118,82 @@ export default function Transporte(props) {
     setSelectedTokenId('');    
   }
 
-  // al pulsar el boton se asigna el precio al token pero no se envia la propiedad al conrtato, 
-  // se envia al transporte y cuando este termine se pasa al contrato.
-/*  const putOnSale = async () => {
-    try {
-      const trazabilidad = await getContract(true);
-      const tx = await trazabilidad.putOnSale(selectedTokenId, precioProducto);
+ 
+ const transferTransporte = async () => {
+         setLoading(true);
+         try {
+             if (!selectedTokenId) {
+                 setSnackbarMessage('Por favor, selecciona un token para transferir.');
+                 setSnackbarSeverity('warning');
+                 setSnackbarOpen(true);
+                 return;
+             }
+             
+            
+ 
+             const trazabilidad = await getContract(true);
+             if (!trazabilidad) return;
+ 
+             const tx = await trazabilidad.transferirATransporte(utils.getAddress(transporteAddress), selectedTokenId);
+             
+             setSnackbarMessage(`Transfiriendo token ${selectedTokenId} al transporte...`);
+             setSnackbarSeverity('info');
+             setSnackbarOpen(true);
+ 
+             await tx.wait();
+             setSnackbarMessage(`Token ${selectedTokenId} transferido al transporte exitosamente!`);
+             setSnackbarSeverity('success');
+             setSnackbarOpen(true);
+             await getTokens(); // Refresh tokens
+             setSelectedTokenId(''); // Deselect token
+         } catch (error) {
+             console.error("Comercio: Error al transferir el token al transporte:", error);
+             let errorMessage = "Error desconocido.";
+             if (error.code === 4001) {
+                 errorMessage = "Transacción rechazada por el usuario en MetaMask.";
+             } else if (error.reason) {
+                 errorMessage = `Error: ${error.reason}`;
+             } else if (error.message) {
+                 errorMessage = `Error: ${error.message}`;
+             }
+             setSnackbarMessage(`Ha habido un error al transferir el token: ${errorMessage}`);
+             setSnackbarSeverity('error');
+             setSnackbarOpen(true);
+         } finally {
+             setLoading(false);
+         }
+     }
+     // --- Función para cerrar la Snackbar ---
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
 
-      setLoading(true);
-      await tx.wait();
-
-    } catch (error) {
-      console.log(error);
-      window.alert("Ha habido un error al poner el token en venta");
-    }
-  }
-  */
   const asignarPrecio = async () => {
     try {
       const trazabilidad = await getContract(true);
-      const tx = await trazabilidad.putPrecio(selectedTokenId, precioProducto.toString(2));     
+      const tx = await trazabilidad.putPrecio(selectedTokenId, precioProducto.toString(2));  
+      setSnackbarMessage(`Asignando precio al Token ${selectedTokenId}...`);
+             setSnackbarSeverity('info');
+             setSnackbarOpen(true);   
       await tx.wait();
-      const transport = await trazabilidad.transferirATransporte(transporteAddress, selectedTokenId);
+      setPrecioAsignado(true);
+      setSnackbarMessage(`Se asignó precio al Token ${selectedTokenId} exitosamente!`);
+             setSnackbarSeverity('success');
+             setSnackbarOpen(true);
+        await getTokens(); // Refresh tokens
       setLoading(true);
       
     } catch (error) {
       console.log(error);
-      window.alert("Ha habido un error al asignar el precio");
-    }
+      setSnackbarMessage(`Ha habido un error al asignar precio al token: ${errorMessage}`);
+             setSnackbarSeverity('error');
+             setSnackbarOpen(true);
+    } finally {
+        setLoading(false);
+        }
   }
 
   function handlePutOnSale(event) {
@@ -287,35 +351,75 @@ export default function Transporte(props) {
 
 
         <div className={styles.flexContainer}>
-          
+                    {/* Formulario de Asignar precio de venta */}
+                    <div className={styles.form}>
+                        <h4>Asignar precio de venta</h4>
+                        
+                        <Form onSubmit={handlePutOnSale}>
+                            <Form.Group className="mb-3" controlId="precio">
+                                <Form.Label>Precio de venta</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    placeholder="Introduce el precio"
+                                    value={precioProducto}
+                                    onChange={event => setPrecioProducto(event.target.value)}
+                                    // Disable input if no token selected, or not in 'Aceptado' state, or loading
+                                    disabled={loading || !selectedTokenId }
+                                />
+                            </Form.Group>
+                            {
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    // Disable button if loading, no token selected, no price, or not in 'Aceptado' state
+                                    disabled={loading || !selectedTokenId || precioProducto === '' }
+                                >
+                                    Asignar precio
+                                </Button>
+                            }
+                        </Form>
+                    </div>
 
-          <div className={styles.form}>
-            <h4>Precio de venta</h4>
-            {
-              selectedTokenId != '' && isNew ?
-                <p>Token seleccionado para la venta</p>
-                :
-                <p>Selecciona un token nuevo</p>
-            }
-            <Form onSubmit={handlePutOnSale}>
-              <Form.Group className="mb-3" controlId="precio">
-                <Form.Label>Precio</Form.Label>
-                <Form.Control
-                  placeholder="Introduce el precio de venta para el producto"
-                  value={precioProducto}
-                  onChange={event => {setPrecioProducto(event.target.value)}}
-                />
-              </Form.Group>
-              {
-                <Button variant="primary" type="submit" disabled={selectedTokenId == '' || precioProducto == ''}>
-                  Poner en venta
-                </Button>
-              }
-            </Form>
-          </div>
+                    {/* DIV DE TRANSFERENCIAS AL TRANSPORTE */}
+                    <div className={styles.form}>
+                        <h4>Transferir Producto al Transporte</h4>
+                        {
+                            // Find the selected token object to get its estado
+                            (() => {
+                                const selectedTokenObj = tokens.find(t => t.tokenId === Number(selectedTokenId));
+                                if (selectedTokenId && selectedTokenObj && selectedTokenObj.estado === 2) {
+                                    return (
+                                        <p>Token seleccionado: <strong>{selectedTokenId}</strong> (Estado: {translateState(selectedTokenObj.estado)})</p>
+                                    );
+                                } else if (selectedTokenId) {
+                                    return (
+                                        <p>Selecciona un token <strong>aceptado</strong> para transferir al transporte.</p>
+                                    );
+                                } else {
+                                    return (
+                                        <p>Selecciona un token de la tabla.</p>
+                                    );
+                                }
+                            })()
+                        }
+                        <Button
+                            variant="primary" 
+                            onClick={transferTransporte}
+                            disabled={loading || !selectedTokenId || selectedTokenId.estado == 2 || !precioAsignado}
+                        >
+                            Transferir al Transporte
+                        </Button>
+                    </div>
+                </div>
+
+            </div>
+            {/* Snackbar should be here, outside the main div but inside the component's root div */}
+            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%', zIndex: 9999 }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
+
         </div>
-
-      </div>
-    </div>
-  )
+    )
 }

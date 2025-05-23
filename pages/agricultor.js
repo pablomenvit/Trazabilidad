@@ -357,8 +357,8 @@ export default function Agricultor(props) {
                             tokens.length === 0 ?
                                 <tr>
                                     <td style={{ '--bs-table-accent-bg': 'white', 'textAlign': 'center' }} colSpan='6'>
-                                        <p className={styles.p_no_margin}>No hay tokens disponibles para mostrar.</p>
-                                        <p className={styles.p_no_margin}>Crea uno usando el formulario "Nuevo Producto".</p>
+                                        <p className={styles.p_no_margin}>No hay productos disponibles para mostrar.</p>
+                                        <p className={styles.p_no_margin}>Crea uno usando el formulario &quot;Nuevo Producto&quot;.</p>
                                     </td>
                                 </tr>
                                 :
@@ -434,10 +434,10 @@ export default function Agricultor(props) {
                         {selectedTokenId ? (
                             <p>Token seleccionado: <strong>{selectedTokenId}</strong> (Estado: {translateState(selectedTokenEstado)})</p>
                         ) : (
-                            <p>Selecciona un token "Nuevo" de la tabla.</p>
+                            <p>Selecciona un token &quot;Nuevo&quot;de la tabla.</p>
                         )}
                         <Button
-                            variant="info"
+                            variant="primary"
                             onClick={transferComercio}
                             // Deshabilitado si: cargando, no hay token seleccionado, O el token no está en estado "Nuevo" (0)
                             disabled={loading || !selectedTokenId || selectedTokenEstado !== 0}
