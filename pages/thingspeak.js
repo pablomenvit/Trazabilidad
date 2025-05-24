@@ -75,14 +75,11 @@ export default function Thingspeak(props) {
       const minValueBN = minTemp.toString(); 
       const maxValueBN = maxTemp.toString(); 
 
-    
-    setSnackbarMessage(`Guardando temperaturas en la blockchain...`);
-      setSnackbarSeverity('info');
-      setSnackbarOpen(true);
-
-    
     const trazabilidad = new Contract(NFT_CONTRACT_ADDRESS, ABI, signer);
     const temperaturas = await trazabilidad.putTemperatura(tokenId, minValueBN, maxValueBN);
+    setSnackbarMessage(`Guardando temperaturas en la blockchain...`);
+    setSnackbarSeverity('info');
+    setSnackbarOpen(true);
 
     await temperaturas.wait(); 
     
@@ -126,6 +123,7 @@ export default function Thingspeak(props) {
       <Button variant="primary" onClick={startCollection} disabled={isCollecting || tokenId == ''}>
         Inicio
       </Button>
+      &nbsp;&nbsp;
       <Button variant="primary" onClick={stopCollection} disabled={!isCollecting || tokenId == ''}>
         Fin
       </Button>

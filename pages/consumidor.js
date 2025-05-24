@@ -323,7 +323,7 @@ export default function Consumidor(props) {
                     <td>{item.producto}</td>
                     <td>{item.fertilizante}</td>
                     <td>{item.lote}</td>
-                    <td>{item.precio}</td>
+                    <td>{item.precio} €</td>
                     <td>
                       <Button value={item.tokenId} variant="primary" onClick={event => buy(event.target.value)}>
                         Comprar

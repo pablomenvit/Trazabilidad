@@ -82,6 +82,7 @@ export default function Transporte(props) {
 
 
   const putOnMercado = async () => {
+    await getTokens();
     try {
       const trazabilidad = await getContract(true);
       const tx = await trazabilidad.putOnSale(selectedTokenId);
@@ -90,16 +91,19 @@ export default function Transporte(props) {
       setSnackbarSeverity('info');
       setSnackbarOpen(true);
       setLoading(true);
+
       await tx.wait();
-      
+
+      setSnackbarMessage('Token transferido al mercado');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+      getTokens();
     } catch (error) {
       console.log(error);
       
     } finally {
       setLoading(false);
-      setSnackbarMessage('Token transferido al mercado');
-      setSnackbarSeverity('success');
-      setSnackbarOpen(true);
+      
     }
   }
 

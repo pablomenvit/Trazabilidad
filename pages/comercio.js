@@ -22,6 +22,7 @@ export default function Transporte(props) {
   const [tokens, setTokens] = useState([]);
   const [prevIndex, setPrevIndex] = useState(null);
   const [selectedTokenId, setSelectedTokenId] = useState('');
+
    
   const [precioProducto, setPrecioProducto] = useState('');
   
@@ -45,6 +46,7 @@ export default function Transporte(props) {
   }
 
   const getTokens = async () => {
+    setLoading(true);
     const trazabilidad = await getContract(true);
     const tokens = await trazabilidad.getTokenIds();
     var res = [];
@@ -55,8 +57,8 @@ export default function Transporte(props) {
         const attrs = await trazabilidad.obtenerAtributosToken(tokens[i]);
         res.push({
           tokenId: id,
-          producto: attrs[2],
-          fertilizante: attrs[1],
+          producto: attrs[1],
+          fertilizante: attrs[2],
           lote: attrs[3],
           estado: attrs[4]
         });
@@ -120,7 +122,7 @@ export default function Transporte(props) {
 
  
  const transferTransporte = async () => {
-         setLoading(true);
+        await getTokens();
          try {
              if (!selectedTokenId) {
                  setSnackbarMessage('Por favor, selecciona un token para transferir.');
@@ -128,9 +130,6 @@ export default function Transporte(props) {
                  setSnackbarOpen(true);
                  return;
              }
-             
-            
- 
              const trazabilidad = await getContract(true);
              if (!trazabilidad) return;
  
@@ -144,8 +143,8 @@ export default function Transporte(props) {
              setSnackbarMessage(`Token ${selectedTokenId} transferido al transporte exitosamente!`);
              setSnackbarSeverity('success');
              setSnackbarOpen(true);
-             await getTokens(); // Refresh tokens
-             setSelectedTokenId(''); // Deselect token
+             await getTokens(); 
+             setSelectedTokenId(''); 
          } catch (error) {
              console.error("Comercio: Error al transferir el token al transporte:", error);
              let errorMessage = "Error desconocido.";
@@ -183,7 +182,7 @@ export default function Transporte(props) {
       setSnackbarMessage(`Se asignó precio al Token ${selectedTokenId} exitosamente!`);
              setSnackbarSeverity('success');
              setSnackbarOpen(true);
-        await getTokens(); // Refresh tokens
+        await getTokens(); 
       setLoading(true);
       
     } catch (error) {
@@ -351,7 +350,7 @@ export default function Transporte(props) {
 
 
         <div className={styles.flexContainer}>
-                    {/* Formulario de Asignar precio de venta */}
+                    
                     <div className={styles.form}>
                         <h4>Asignar precio de venta</h4>
                         
@@ -363,7 +362,7 @@ export default function Transporte(props) {
                                     placeholder="Introduce el precio"
                                     value={precioProducto}
                                     onChange={event => setPrecioProducto(event.target.value)}
-                                    // Disable input if no token selected, or not in 'Aceptado' state, or loading
+                                   
                                     disabled={loading || !selectedTokenId }
                                 />
                             </Form.Group>
@@ -371,23 +370,24 @@ export default function Transporte(props) {
                                 <Button
                                     variant="primary"
                                     type="submit"
-                                    // Disable button if loading, no token selected, no price, or not in 'Aceptado' state
-                                    disabled={loading || !selectedTokenId || precioProducto === '' }
-                                >
+                                    
+                                    disabled={ loading || !selectedTokenId || precioProducto == ''}
+                                > 
                                     Asignar precio
                                 </Button>
                             }
                         </Form>
                     </div>
 
-                    {/* DIV DE TRANSFERENCIAS AL TRANSPORTE */}
+                    
                     <div className={styles.form}>
                         <h4>Transferir Producto al Transporte</h4>
                         {
-                            // Find the selected token object to get its estado
+                            
                             (() => {
                                 const selectedTokenObj = tokens.find(t => t.tokenId === Number(selectedTokenId));
                                 if (selectedTokenId && selectedTokenObj && selectedTokenObj.estado === 2) {
+                                    //setEstadoT(true);
                                     return (
                                         <p>Token seleccionado: <strong>{selectedTokenId}</strong> (Estado: {translateState(selectedTokenObj.estado)})</p>
                                     );
@@ -405,7 +405,7 @@ export default function Transporte(props) {
                         <Button
                             variant="primary" 
                             onClick={transferTransporte}
-                            disabled={loading || !selectedTokenId || selectedTokenId.estado == 2 || !precioAsignado}
+                            disabled={loading || !selectedTokenId || !precioAsignado}
                         >
                             Transferir al Transporte
                         </Button>
@@ -413,7 +413,7 @@ export default function Transporte(props) {
                 </div>
 
             </div>
-            {/* Snackbar should be here, outside the main div but inside the component's root div */}
+            
             <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
                 <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%', zIndex: 9999 }}>
                     {snackbarMessage}

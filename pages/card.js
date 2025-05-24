@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Button from 'react-bootstrap/Button'; 
 import { experimentalStyled as styled } from '@mui/material/styles';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { useState, useEffect } from "react"; 
+import { useState } from "react"; 
 
 export default function Card(props) {
 

@@ -6,12 +6,31 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+// Componente Alert personalizado para Snackbar 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function Owner (props) {
 
   const [address, setAddress] = useState('');
   const [nombre, setNombre] = useState('');
   const [role, setRole] = useState('');
- // const [location, setLocation] = useState('');
+  // --- Estado para la Snackbar/Alert de MUI ---
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // 'success', 'info', 'warning', 'error' 
+
+  // --- Función para cerrar la Snackbar ---
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
+    // --- Fin de Función para cerrar la Snackbar ---
 
   const getContract = async (needSigner = false) => {
     if (needSigner) {
@@ -37,16 +56,23 @@ export default function Owner (props) {
   const registrarUsuario = async () => {
     try {
       const trazabilidad = await getContract(true);
-
+      setSnackbarMessage(`Registrando al usuario ${nombre}`);
+      setSnackbarSeverity('info');
+      setSnackbarOpen(true);
       await trazabilidad.registrarUsuario(
         address,
         nombre,
         role
       );
-      window.alert("Usuario " + nombre + " registrado correctamente");
+      await trazabilidad.waitForTransaction();
+      setSnackbarMessage(`Usuario ${nombre} registrado correctamente`);
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
     } catch (error) {
       console.log(error);
-      window.alert("Ha habido un error al registrar el usuario");
+      setSnackbarMessage(`Ha habido un error al registrar el usuario`);
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
   }
 
@@ -59,7 +85,6 @@ export default function Owner (props) {
     setAddress('');
     setNombre('');
     setRole('');
-//    setLocation('');
   }
 
   return (
@@ -105,6 +130,11 @@ export default function Owner (props) {
           </Form>
         </div>
       </div>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%', zIndex: 9999 }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   )
 }

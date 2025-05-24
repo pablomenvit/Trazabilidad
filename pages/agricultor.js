@@ -61,7 +61,7 @@ export default function Agricultor(props) {
 
     // Usamos useCallback para memoizar esta función, útil para las dependencias de useEffect
     const getTokens = useCallback(async () => {
-        setLoading(true); // Siempre activar loading al intentar obtener tokens
+        setLoading(true); 
         try {
             const trazabilidad = await getContract(true); // Necesitamos signer para interactuar
             if (!trazabilidad) {
@@ -245,7 +245,7 @@ export default function Agricultor(props) {
         let currentAccount;
 
         const init = async () => {
-            console.log("Iniciando Agricultor component...");
+            console.log("Iniciando componente Agricultor ..");
             if (!props.provider) {
                 console.warn("Provider no disponible. Reintentando en un momento...");
                 // Podrías añadir un setTimeout aquí si es para un reintento,

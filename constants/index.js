@@ -1,5 +1,5 @@
 //    Variables Smart Contract
-export const NFT_CONTRACT_ADDRESS = "0xc5b06a9aa7d8f5b38faea95b57af718b9a50debe";
+export const NFT_CONTRACT_ADDRESS = "0x885b2570ba7a15ebac481e9fa3c216a0f590e961";
 export const ABI = [
 	{
 		"inputs": [],
@@ -360,6 +360,19 @@ export const ABI = [
 		"name": "buy",
 		"outputs": [],
 		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "comercioAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -982,6 +995,19 @@ export const ABI = [
 		"name": "transferirDesde",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "transporteAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ];
