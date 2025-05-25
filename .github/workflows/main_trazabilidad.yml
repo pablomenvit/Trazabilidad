@@ -61,4 +61,4 @@ jobs:
           app-name: 'Trazabilidad'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FDBEF5D50EE84FF8B9EF580401E56674 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_70DEFA2DA91047BFAC7F16F013EDF102 }}
