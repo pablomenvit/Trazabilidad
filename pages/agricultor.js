@@ -2,9 +2,7 @@ import { Contract, utils } from "ethers";
 import React, { useEffect, useState, useCallback } from "react"; 
 import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
 
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Table from 'react-bootstrap/Table';
+import { Form, Button, Table } from 'react-bootstrap';
 import Image from 'next/image';
 import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';

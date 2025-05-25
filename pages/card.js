@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Button from 'react-bootstrap/Button'; 
+import { Button } from 'react-bootstrap/Button'; 
 import { experimentalStyled as styled } from '@mui/material/styles';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useState } from "react"; 
