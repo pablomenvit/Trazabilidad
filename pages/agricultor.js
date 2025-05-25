@@ -94,6 +94,7 @@ export default function Agricultor(props) {
         } finally {
             setLoading(false); 
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.provider]); 
 
     const minadoAgricultor = async () => {
