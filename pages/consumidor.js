@@ -422,6 +422,7 @@ export default function Consumidor(props) {
         if (props.provider) {
             initContractAndListeners();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.provider]); 
 
 
@@ -438,6 +439,7 @@ export default function Consumidor(props) {
         }
         fetchHistory();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedTokenId]); 
 
     useEffect(() => {
@@ -446,6 +448,7 @@ export default function Consumidor(props) {
             setLoadingHistory(false);
             setBoxCards(htmlElement);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cards]); 
 
     // Calcular los pagos esperados

@@ -116,6 +116,7 @@ export default function Home() {
       }
       fetchRole();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider])
   
   useEffect(() => {
