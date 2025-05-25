@@ -1,7 +1,7 @@
 import { Contract, utils } from "ethers";
 import React, { useEffect, useState } from "react";
 import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
-// styles and html components
+
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
@@ -387,7 +387,7 @@ export default function Transporte(props) {
                             (() => {
                                 const selectedTokenObj = tokens.find(t => t.tokenId === Number(selectedTokenId));
                                 if (selectedTokenId && selectedTokenObj && selectedTokenObj.estado === 2) {
-                                    //setEstadoT(true);
+                                    
                                     return (
                                         <p>Token seleccionado: <strong>{selectedTokenId}</strong> (Estado: {translateState(selectedTokenObj.estado)})</p>
                                     );

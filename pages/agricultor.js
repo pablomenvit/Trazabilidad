@@ -1,7 +1,7 @@
 import { Contract, utils } from "ethers";
-import React, { useEffect, useState, useCallback } from "react"; // Añadir useCallback
+import React, { useEffect, useState, useCallback } from "react"; 
 import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
-// styles and html components
+
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
@@ -21,12 +21,12 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function Agricultor(props) {
 
-    // Cambiado a true para que el loading se muestre al inicio
+    
     const [loading, setLoading] = useState(true);
     const [tokens, setTokens] = useState([]);
-    // prevIndex ya no es estrictamente necesario si usamos tokenId para la selección
+    
     const [selectedTokenId, setSelectedTokenId] = useState('');
-    // variables related to mint of token
+    
     const [producto, setProducto] = useState('');
     const [lote, setLote] = useState('');
     const [fertilizante, setFertilizante] = useState('');
@@ -42,7 +42,7 @@ export default function Agricultor(props) {
     const getContract = async (needSigner = false) => {
         if (!props.provider) {
             console.warn("Provider no disponible en getContract.");
-            return null; // Es importante retornar null o lanzar un error si el provider no existe
+            return null; 
         }
         try {
             if (needSigner) {
@@ -59,14 +59,14 @@ export default function Agricultor(props) {
         }
     }
 
-    // Usamos useCallback para memoizar esta función, útil para las dependencias de useEffect
+    
     const getTokens = useCallback(async () => {
         setLoading(true); 
         try {
-            const trazabilidad = await getContract(true); // Necesitamos signer para interactuar
+            const trazabilidad = await getContract(true); 
             if (!trazabilidad) {
                 console.warn("Contrato no inicializado, no se pudieron obtener los tokens.");
-                return; // Salir si el contrato no se inicializó
+                return; 
             }
             const tokensOnChain = await trazabilidad.getTokenIds();
             let res = [];
@@ -106,7 +106,7 @@ export default function Agricultor(props) {
                 return;
             }
 
-            let tokenId = Date.now(); // Genera un ID basado en el timestamp
+            let tokenId = Date.now(); 
             const trazabilidad = await getContract(true);
             if (!trazabilidad) return;
 
@@ -116,12 +116,12 @@ export default function Agricultor(props) {
             setSnackbarSeverity('info');
             setSnackbarOpen(true);
             
-            await tx.wait(); // Espera a que la transacción sea minada
+            await tx.wait(); 
 
             setSnackbarMessage("Token minado exitosamente!");
             setSnackbarSeverity('success');
             setSnackbarOpen(true);
-            await getTokens(); // Refrescar la lista de tokens después de una transacción exitosa
+            await getTokens(); 
 
         } catch (error) {
             console.error("Error al minar el token:", error);
@@ -145,7 +145,7 @@ export default function Agricultor(props) {
     const handleMint = event => {
         event.preventDefault();
         minadoAgricultor();
-        // Limpiar campos después de iniciar la transacción, el refresh de la tabla viene de getTokens()
+        
         setProducto('');
         setLote('');
         setFertilizante('');
@@ -164,7 +164,7 @@ export default function Agricultor(props) {
             const trazabilidad = await getContract(true);
             if (!trazabilidad) return;
 
-            // Encontrar el token seleccionado para verificar su estado
+            
             const tokenToTransfer = tokens.find(t => t.tokenId === selectedTokenId);
             if (!tokenToTransfer || tokenToTransfer.estado !== 0) {
                 setSnackbarMessage('Solo puedes transferir tokens en estado "Nuevo".');
@@ -180,13 +180,13 @@ export default function Agricultor(props) {
             setSnackbarSeverity('info');
             setSnackbarOpen(true);
 
-            await tx.wait(); // Espera a que la transacción sea minada
+            await tx.wait(); 
 
             setSnackbarMessage("Token transferido al comercio exitosamente!");
             setSnackbarSeverity('success');
             setSnackbarOpen(true);
-            await getTokens(); // Refrescar la lista de tokens después de una transacción exitosa
-            setSelectedTokenId(''); // Deseleccionar el token después de transferir
+            await getTokens(); 
+            setSelectedTokenId(''); 
             
         } catch (error) {
             console.error("Error al transferir el token:", error);
@@ -207,15 +207,15 @@ export default function Agricultor(props) {
         }
     }
 
-    const onClickTokenSelect = (tokenId) => { // Simplificamos la función
-        // Convertir el tokenId a número porque `value` de `Form.Check` es string
+    const onClickTokenSelect = (tokenId) => { 
+        
         const numTokenId = Number(tokenId);
         if (selectedTokenId === numTokenId) {
-            setSelectedTokenId(''); // Deseleccionar si ya estaba seleccionado
+            setSelectedTokenId(''); 
         } else {
             setSelectedTokenId(numTokenId);
         }
-        // No necesitamos prevIndex si la comparación es directa con selectedTokenId
+        
     }
 
     const translateState = (state) => {
@@ -241,48 +241,44 @@ export default function Agricultor(props) {
     // --- Fin de Función para cerrar la Snackbar ---
 
     useEffect(() => {
-        let trazabilidad; // Declarar aquí para scope de return
+        let trazabilidad; 
         let currentAccount;
 
         const init = async () => {
             console.log("Iniciando componente Agricultor ..");
             if (!props.provider) {
                 console.warn("Provider no disponible. Reintentando en un momento...");
-                // Podrías añadir un setTimeout aquí si es para un reintento,
-                // pero lo ideal es que el provider venga de un _app.js bien configurado.
+                
                 setSnackbarMessage("MetaMask no detectado o conectado. Por favor, conecta tu wallet.");
                 setSnackbarSeverity('warning');
                 setSnackbarOpen(true);
-                setLoading(false); // Desactiva loading si no hay provider para no quedar bloqueado
+                setLoading(false); 
                 return;
             }
 
             try {
-                // 1. Obtener la cuenta del usuario (agricultor)
+                
                 const accounts = await props.provider.send("eth_requestAccounts", []);
                 currentAccount = utils.getAddress(accounts[0]);
                 console.log("Cuenta conectada:", currentAccount);
 
-                // 2. Inicializar el contrato con el provider
+                
                 trazabilidad = new Contract(NFT_CONTRACT_ADDRESS, ABI, props.provider);
                 console.log("Contrato de trazabilidad inicializado.");
 
-                // 3. Cargar los tokens iniciales
-                await getTokens(); // Llama a la versión useCallback para cargar y actualizar el estado
+                
+                await getTokens(); 
 
-                // 4. Configurar listeners de eventos
-                // Listener para tokens minados POR el agricultor (from: currentAccount, to: currentAccount, state: 0)
-                // Esto es para cuando el agricultor crea un nuevo token.
+               
                 trazabilidad.on(trazabilidad.filters.Transaccion(currentAccount, currentAccount, 0), async (_from, _tokenId, _state) => {
                     console.log("Evento 'Nuevo' recibido:", _tokenId.toNumber());
-                    await getTokens(); // Refrescar la lista de tokens
+                    await getTokens(); 
                     setSnackbarMessage(`¡Nuevo token (ID: ${_tokenId.toNumber()}) minado para ti!`);
                     setSnackbarSeverity('info');
                     setSnackbarOpen(true);
                 });
 
-                // Listener para tokens transferidos DEL agricultor AL comercio (from: currentAccount, to: comercioAddress, state: 1)
-                // Este evento se emite cuando el agricultor transfiere un token al comercio.
+                
                 trazabilidad.on(trazabilidad.filters.Transaccion(currentAccount, utils.getAddress(comercioAddress), 1), async (_from, _tokenId, _state) => {
                     console.log("Evento 'Entregado a Comercio' recibido:", _tokenId.toNumber());
                     await getTokens();
@@ -291,8 +287,7 @@ export default function Agricultor(props) {
                     setSnackbarOpen(true);
                 });
 
-                // Listener para tokens RECHAZADOS por el comercio (from: comercioAddress, to: currentAccount, state: 3)
-                // Este evento se emite cuando el comercio devuelve un token al agricultor.
+                
                 trazabilidad.on(trazabilidad.filters.Transaccion(utils.getAddress(comercioAddress), currentAccount, 3), async (_from, _tokenId, _state) => {
                     console.log("Evento 'Rechazado por Comercio' recibido:", _tokenId.toNumber());
                     await getTokens();
@@ -301,27 +296,27 @@ export default function Agricultor(props) {
                     setSnackbarOpen(true);
                 });
 
-                setLoading(false); // Desactivar loading una vez que todo se ha cargado e inicializado
+                setLoading(false); 
 
             } catch (error) {
                 console.error("Error en la inicialización del componente Agricultor:", error);
                 setSnackbarMessage("Error al iniciar el componente: " + (error.reason || error.message || "Verifica tu conexión a Metamask."));
                 setSnackbarSeverity('error');
                 setSnackbarOpen(true);
-                setLoading(false); // Asegúrate de desactivar loading si hay un error en la inicialización
+                setLoading(false); 
             }
         };
 
-        init(); // Llama a la función de inicialización
+        init(); 
 
-        // Función de limpieza del useEffect
+        
         return () => {
             if (trazabilidad) {
                 console.log("Removiendo listeners de trazabilidad...");
                 trazabilidad.removeAllListeners();
             }
         };
-    }, [props.provider, getTokens, comercioAddress]); // Dependencias de useEffect
+    }, [props.provider, getTokens, comercioAddress]); 
 
     const selectedTokenEstado = tokens.find(t => t.tokenId === selectedTokenId)?.estado;
 
@@ -370,7 +365,7 @@ export default function Agricultor(props) {
                                                 id={`token-${item.tokenId}`}
                                                 value={item.tokenId}
                                                 name="selectedToken"
-                                                checked={selectedTokenId === item.tokenId} // Comparación directa
+                                                checked={selectedTokenId === item.tokenId} 
                                                 readOnly
                                                 onClick={() => onClickTokenSelect(item.tokenId)}
                                             />
@@ -389,7 +384,7 @@ export default function Agricultor(props) {
 
 
                 <div className={styles.flexContainer}>
-                    {/* Formulario de Nuevo Producto (Minado) */}
+                    
                     <div className={styles.form}>
                         <Form onSubmit={handleMint}>
                             <h4>Nuevo Producto</h4>
@@ -402,7 +397,7 @@ export default function Agricultor(props) {
                                     disabled={loading}
                                 />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="lote"> {/* Cambiado id de quantity a lote */}
+                            <Form.Group className="mb-3" controlId="lote"> 
                                 <Form.Label>Lote</Form.Label>
                                 <Form.Control
                                     placeholder="Número de lote"
@@ -411,7 +406,7 @@ export default function Agricultor(props) {
                                     disabled={loading}
                                 />
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="fertilizante"> {/* Cambiado id de quantity a fertilizante */}
+                            <Form.Group className="mb-3" controlId="fertilizante"> 
                                 <Form.Label>Fertilizante</Form.Label>
                                 <Form.Control
                                     placeholder="Fertilizante usado"
@@ -428,7 +423,7 @@ export default function Agricultor(props) {
                         </Form>
                     </div>
 
-                    {/* DIV DE TRANSFERENCIAS */}
+                   
                     <div className={styles.form}>
                         <h4>Transferir Producto al Comercio</h4>
                         {selectedTokenId ? (
@@ -439,7 +434,7 @@ export default function Agricultor(props) {
                         <Button
                             variant="primary"
                             onClick={transferComercio}
-                            // Deshabilitado si: cargando, no hay token seleccionado, O el token no está en estado "Nuevo" (0)
+                            
                             disabled={loading || !selectedTokenId || selectedTokenEstado !== 0}
                         >
                             Transferir al Comercio

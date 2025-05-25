@@ -2,7 +2,7 @@ import { Contract, utils } from "ethers";
 import React, { useEffect, useState } from "react";
 import { NFT_CONTRACT_ADDRESS, ABI } from "../constants";
 import Thinkspeak from "./thingspeak";
-// styles and html components
+
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
