@@ -88,6 +88,7 @@ export default function Consumidor(props) {
             if (id !== 0) {
                 const attrs = await trazabilidad.obtenerAtributosToken(tokens[i]);
                 const estado = attrs[4];
+                
 
                 if (bought) {
                     if (estado === 6) { 
@@ -96,14 +97,15 @@ export default function Consumidor(props) {
                 } else {
                     if (estado === 5) { 
                         const priceWei = await trazabilidad.getPrice(id);
+                        const precioEUR = priceWei * 10 /10;
                         aux.push({
                             tokenId: id,
                             producto: attrs[1],
                             fertilizante: attrs[3],
                             lote: attrs[2],
                             estado: estado,
-                            precio: utils.formatEther(priceWei), // Precio en ETH
-                            precioWei: priceWei.toString(), // Precio en Wei (como string)
+                            precio: precioEUR, 
+                            precioWei: utils.formatEther(priceWei).toString(), // Precio en Wei (como string)
                             creadoPor: attrs[0]
                         });
                     }
@@ -473,7 +475,7 @@ export default function Consumidor(props) {
                             <th>Producto</th>
                             <th>Fertilizante</th>
                             <th>Lote</th>
-                            <th>Precio (ETH)</th>
+                            <th>Precio (EUR)</th>
                             <th>Accion</th>
                         </tr>
                     </thead>
@@ -496,7 +498,7 @@ export default function Consumidor(props) {
                                                     id={`token-${item.tokenId}`}
                                                     value={item.tokenId}
                                                     name="selectedToken"
-                                                    checked={selectedTokenId === String(item.tokenId)} // Compara con String
+                                                    checked={selectedTokenId === String(item.tokenId)} 
                                                     readOnly
                                                     onClick={event => onClickTokenSelect(event.target.value, "available_" + index)}
                                                 />
