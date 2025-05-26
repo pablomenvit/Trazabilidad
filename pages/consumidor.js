@@ -96,6 +96,7 @@ aux.push({ tokenId: id, producto: attrs[1], fertilizante: attrs[3], lote: attrs[
 }
 } else {
 if (estado === 5) { 
+    console.log(tokensAvailable);
 const priceWei = await trazabilidad.getPrice(id);
 const precioEUR = priceWei * 10 /10;
 aux.push({
@@ -105,7 +106,7 @@ fertilizante: attrs[3],
 lote: attrs[2],
 estado: estado,
 precio: precioEUR, 
-precioWei: utils.formatEther(priceWei).toString(), // Precio en Wei (como string)
+precioWei: priceWei, // Precio en Wei 
 creadoPor: attrs[0]
 });
 }
@@ -193,9 +194,9 @@ setLoadingAvailable(true);
 setLoadingBought(true);
 const trazabilidad = await getContract(true);
 
-const precioAPagar = BigNumber.from(selectedToken.precioWei);
-
-setSnackbarMessage(`Enviando transacción de compra por ${utils.formatEther(precioAPagar)} ETH...`);
+const precioAPagar = selectedToken.precioWei; //BigNumber.from(selectedToken.precioWei);
+      
+setSnackbarMessage(`Enviando transacción de compra por ${precioAPagar/*utils.formatEther(precioAPagar)*/} ETH...`);
 setSnackbarSeverity('info');
 setSnackbarAutoCloseDuration(6000); 
 setSnackbarOpen(true);
