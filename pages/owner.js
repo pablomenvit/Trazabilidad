@@ -5,7 +5,7 @@ import { ABI, NFT_CONTRACT_ADDRESS } from '../constants'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
-
+//
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 // Componente Alert personalizado para Snackbar 
