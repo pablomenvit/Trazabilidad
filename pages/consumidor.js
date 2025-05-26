@@ -285,7 +285,7 @@ export default function Consumidor(props) {
 
             const price = await trazabilidad.getPrice(event.args._tokenId);
             const temperatura = await trazabilidad.obtenerTemperatura(event.args._tokenId);
-            completeData.precio = parseInt(price.toString(10));
+            completeData.precio = parseInt(price.toString());
 
             completeData.temperaturaMin = temperatura[0];
             completeData.temperaturaMax = temperatura[1];
