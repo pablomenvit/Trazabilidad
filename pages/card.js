@@ -116,7 +116,7 @@ return (
 <strong>Producto:</strong>
 </Typography>
 <Typography variant="subtitle1" color="white" noWrap>
-&nbsp;{tokenData.attrs.lote}
+&nbsp;{tokenData.attrs.producto}
 </Typography>
 <Typography variant="subtitle1" color="white" noWrap>
 &nbsp;&nbsp;&nbsp;<strong>Fertilizante:</strong>
@@ -130,7 +130,7 @@ return (
 <strong>Lote Nº:</strong>
 </Typography>
 <Typography variant="subtitle1" color="white" noWrap>
-&nbsp;{tokenData.attrs.producto}
+&nbsp;{tokenData.attrs.lote}
 </Typography>
 </div>
 <div style={{ display: "flex" }}>

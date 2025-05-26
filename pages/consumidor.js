@@ -169,7 +169,7 @@ try {
 if (!selectedTokenId) {
 setSnackbarMessage('Por favor, selecciona un token para comprar.');
 setSnackbarSeverity('warning');
-setSnackbarAutoCloseDuration(6000); 
+setSnackbarAutoCloseDuration(4000); 
 setSnackbarOpen(true);
 return;
 }
@@ -178,14 +178,14 @@ const selectedToken = tokensAvailable.find(t => t.tokenId === Number(selectedTok
 if (!selectedToken || selectedToken.estado !== 5) { 
 setSnackbarMessage('El token seleccionado no está en venta.');
 setSnackbarSeverity('warning');
-setSnackbarAutoCloseDuration(6000);
+setSnackbarAutoCloseDuration(4000);
 setSnackbarOpen(true);
 return;
 }
 
 setSnackbarMessage('Obteniendo balances actuales...');
 setSnackbarSeverity('info');
-setSnackbarAutoCloseDuration(2000); 
+setSnackbarAutoCloseDuration(3000); 
 setSnackbarOpen(true);
 await fetchAndDisplayBalances(selectedTokenId);
 
@@ -198,7 +198,7 @@ const precioAPagar = selectedToken.precioWei; //BigNumber.from(selectedToken.pre
       
 setSnackbarMessage(`Enviando transacción de compra por ${precioAPagar/*utils.formatEther(precioAPagar)*/} ETH...`);
 setSnackbarSeverity('info');
-setSnackbarAutoCloseDuration(6000); 
+setSnackbarAutoCloseDuration(7000); 
 setSnackbarOpen(true);
 
 const tx = await trazabilidad.buy(selectedTokenId, { value: precioAPagar });
@@ -308,7 +308,7 @@ await getHistory(arrayCards, events, pos + 1, order + 1);
 console.log(error);
 setSnackbarMessage("Hay un error al obtener el historial");
 setSnackbarSeverity('error');
-setSnackbarAutoCloseDuration(6000);
+setSnackbarAutoCloseDuration(7000);
 setSnackbarOpen(true);
 }
 }
