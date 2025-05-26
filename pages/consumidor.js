@@ -14,6 +14,7 @@ import Card from './card'; // Importación del componente Card
 
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import Typography from '@mui/material/Typography';
 
 // Componente Alert personalizado para Snackbar.
 // Utiliza React.forwardRef para que Snackbar pueda acceder a la referencia interna.
