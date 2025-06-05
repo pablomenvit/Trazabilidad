@@ -82,7 +82,7 @@ setIsCopied(false);
 }, 1500);
 };
 
-
+//
 if (!props.data || !props.data.txHash) {
 return (
     <Typography variant="h6" color="error" style={{ textAlign: 'center', marginTop: '2rem' }}>

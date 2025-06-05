@@ -116,7 +116,7 @@ creadoPor: attrs[0]
 return aux;
 }
 
-// --- Obtener y mostrar balances de las cuentas ---
+/// --- Obtener y mostrar balances de las cuentas ---
 const fetchAndDisplayBalances = async (tokenId) => {
 const trazabilidadNoSigner = await getContract(false);
 

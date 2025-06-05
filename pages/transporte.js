@@ -10,7 +10,7 @@ import Image from 'next/image';
 import styles from "../styles/Home.module.css";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-// --- Importaciones de Material-UI ---
+/// --- Importaciones de Material-UI ---
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 

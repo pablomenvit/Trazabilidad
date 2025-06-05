@@ -9,7 +9,7 @@ import Agricultor from './agricultor'
 import Comercio from './comercio'
 import Transporte from './transporte'
 import Consumidor from './consumidor'
-
+//
 export default function Home() {
   
   const [walletConnected, setWalletConnected] = useState(false);
