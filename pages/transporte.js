@@ -14,7 +14,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
-// Componente Alert personalizado para Snackbar (para usar el Alert de MUI)
+// Componente Alert personalizado para Snackbar
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });

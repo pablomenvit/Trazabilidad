@@ -11,68 +11,68 @@ export default function Card(props) {
 const [isCopied, setIsCopied] = useState(false);
 
 const Item = styled(Paper)(({ theme }) => ({
-display: 'flex',
-marginBottom: '8%',
-flexDirection: 'column',
-textAlign: 'center',
-paddingTop: theme.spacing(1),
-paddingBottom: theme.spacing(1),
-paddingLeft: theme.spacing(3),
-...theme.typography.body2,
-color: theme.palette.text.secondary,
-backgroundColor: theme.palette.mode === 'dark' ? '#fff' : '#0d3b66',
+    display: 'flex',
+    marginBottom: '8%',
+    flexDirection: 'column',
+    textAlign: 'center',
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(3),
+    ...theme.typography.body2,
+    color: theme.palette.text.secondary,
+    backgroundColor: theme.palette.mode === 'dark' ? '#fff' : '#0d3b66',
 }));
 
 const Title = styled('div')(({ theme }) => ({
-...theme.typography.button,
-...theme.typography.h6,
-color: '#fff',
-fontWeight: 550,
-padding: theme.spacing(1),
-textAlign: 'center',
+    ...theme.typography.button,
+    ...theme.typography.h6,
+    color: '#fff',
+    fontWeight: 550,
+    padding: theme.spacing(1),
+    textAlign: 'center',
 }));
 
 const getMyDate = (date) => {
 const myDate = new Date(parseInt(date));
 return (
-myDate.getDate() +
-"/" + (myDate.getMonth() + 1) +
-"/" + myDate.getFullYear() +
-" " + myDate.getHours() +
-":" + myDate.getMinutes() +
-":" + myDate.getSeconds()
-);
+    myDate.getDate() +
+        "/" + (myDate.getMonth() + 1) +
+        "/" + myDate.getFullYear() +
+        " " + myDate.getHours() +
+        ":" + myDate.getMinutes() +
+        ":" + myDate.getSeconds()
+    );
 };
 
 const translateState = (state) => {
-switch (state) {
-case 0: return "Nuevo";
-case 1: return "Entregado";
-case 2: return "Aceptado";
-case 3: return "Rechazado";
-case 4: return "En transporte";
-case 5: return "En venta";
-case 6: return "Comprado";
-default: return "Desconocido";
-}
+    switch (state) {
+        case 0: return "Nuevo";
+        case 1: return "Entregado";
+        case 2: return "Aceptado";
+        case 3: return "Rechazado";
+        case 4: return "En transporte";
+        case 5: return "En venta";
+        case 6: return "Comprado";
+        default: return "Desconocido";
+    }
 };
 
 const translateRole = (role) => {
-switch (role) {
-case 0: return "Agricultor";
-case 1: return "Comercio";
-case 2: return "Transporte";
-case 3: return "Consumidor";
-default: return "Desconocido";
-}
+    switch (role) {
+        case 0: return "Agricultor";
+        case 1: return "Comercio";
+        case 2: return "Transporte";
+        case 3: return "Consumidor";
+        default: return "Desconocido";
+    }
 };
 
 const calculaReparto = (precioV) => {
-return {
-agricultor: precioV * 0.35,
-comercio: precioV * 0.5,
-transporte: precioV * 0.15,
-};
+    return {
+        agricultor: precioV * 0.35,
+        comercio: precioV * 0.5,
+        transporte: precioV * 0.15,
+    };
 };
 
 const handleCopyClick = () => {
@@ -82,13 +82,13 @@ setIsCopied(false);
 }, 1500);
 };
 
-// ✅ Validación para evitar errores de prerender
+
 if (!props.data || !props.data.txHash) {
 return (
-<Typography variant="h6" color="error" style={{ textAlign: 'center', marginTop: '2rem' }}>
-No hay información disponible para mostrar la tarjeta.
-</Typography>
-);
+    <Typography variant="h6" color="error" style={{ textAlign: 'center', marginTop: '2rem' }}>
+    No hay información disponible para mostrar la tarjeta.
+    </Typography>
+    );
 }
 
 const tokenData = props.data;

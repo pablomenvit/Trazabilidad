@@ -194,9 +194,9 @@ setLoadingAvailable(true);
 setLoadingBought(true);
 const trazabilidad = await getContract(true);
 
-const precioAPagar = selectedToken.precioWei; //BigNumber.from(selectedToken.precioWei);
+const precioAPagar = selectedToken.precioWei; 
       
-setSnackbarMessage(`Enviando transacción de compra por ${precioAPagar/*utils.formatEther(precioAPagar)*/} ETH...`);
+setSnackbarMessage(`Enviando transacción de compra por ${precioAPagar} ETH...`);
 setSnackbarSeverity('info');
 setSnackbarAutoCloseDuration(7000); 
 setSnackbarOpen(true);
@@ -330,7 +330,7 @@ htmlElement.push(
 </Box>
 )
 }
-setUniqueTokenIds([]); // Limpiar uniqueTokenIds después de usarlos
+setUniqueTokenIds([]); // Limpia uniqueTokenIds después de usarlos
 return htmlElement;
 }
 
