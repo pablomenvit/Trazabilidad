@@ -1,5 +1,5 @@
 //    Variables Smart Contract
-export const NFT_CONTRACT_ADDRESS = "0xc4bf60f74f6a184726f9ad3596abe639501fec1c";
+export const NFT_CONTRACT_ADDRESS = "0x66543342341ba082a3bad8ab9e8ca047f9c87527";
 export const ABI = [
 	{
 		"inputs": [
